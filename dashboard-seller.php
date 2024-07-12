@@ -1,0 +1,38 @@
+<?php
+/*Template Name: Dashboard Seller */
+defined( 'ABSPATH' ) || exit;
+
+$user = wp_get_current_user();
+$user_id = $user->ID;
+
+$profile_image = 0;
+?>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <?php wp_head(); ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <main>
+        <div class="container my-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-3">
+ 
+                </div>
+                <div class="lg:col-span-9 h-fit">
+                    <?php
+                        if (is_dashboard_seller_endpoint('add-product')) {
+                            include MV_DIR_PATH . '/templates/client/products/add-product.php';
+                        } elseif(is_dashboard_seller_endpoint('products')) {
+                            include MV_DIR_PATH . '/templates/client/products/products.php';
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<?php wp_footer(); ?>
+</html>

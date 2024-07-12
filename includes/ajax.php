@@ -1,0 +1,144 @@
+<?php
+function check_product_existence($product_id, $user_id) {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'kalayadak24_multivendor_products';
+
+    // Query to check if the product for this user already exists
+    $query = $wpdb->prepare(
+        "SELECT COUNT(*) FROM $table_name WHERE product_id = %d AND seller_id = %d",
+        $product_id,
+        $user_id
+    );
+
+    $result = $wpdb->get_var($query);
+
+    if ($result > 0) {
+        return true; // Product already exists for this user
+    } else {
+        return false; // Product does not exist for this user
+    }
+}
+
+function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status) {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'kalayadak24_multivendor_products';
+
+    $data = array(
+        'product_id' => $product_id,
+        'seller_id' => $seller_id,
+        'regular_price' => $regular_price,
+        'sale_price' => $sale_price,
+        'from_sale_date' => $from_sale_date,
+        'to_sale_date' => $to_sale_date,
+        'stock' => $stock,
+        'min_stock' => $min_stock,
+        'sold_individually' => $sold_individually,
+        'status' => $status,
+    );
+
+    $format = array(
+        '%d', // product_id
+        '%d', // seller_id
+        '%f', // regular_price
+        '%f', // sale_price
+        '%s', // from_sale_date
+        '%s', // to_sale_date
+        '%d', // stock
+        '%d', // min_stock
+        '%s', // sold_individually
+        '%s', // status
+    );
+
+    $wpdb->insert($table_name, $data, $format);
+
+    // Check if the insert was successful
+    if ($wpdb->last_error) {
+        return $wpdb->last_error; // Return false if there was an error
+    } else {
+        return $wpdb->insert_id; // Return true if the insert was successful
+    }
+}
+
+
+function mv_add_product() {
+
+    $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
+    $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
+    $regular_price = isset($_POST['regular_price']) ? floatval($_POST['regular_price']) : 0;
+    $sale_price = isset($_POST['sale_price']) ? $_POST['sale_price'] : " ";
+    $from_sale_date = isset($_POST['from_sale_date']) ? sanitize_text_field($_POST['from_sale_date']) : '';
+    $to_sale_date = isset($_POST['to_sale_date']) ? sanitize_text_field($_POST['to_sale_date']) : '';
+    $stock = isset($_POST['stock']) ? intval($_POST['stock']) : 0;
+    $min_stock = isset($_POST['min_stock']) ? intval($_POST['min_stock']) : 0;
+    $sold_individually = isset($_POST['sold_individually']) ? sanitize_text_field($_POST['sold_individually']) : 'no';
+
+    $status = "pending";
+
+    if($user_id == 0 ){
+        wp_send_json_error(array(
+            'message' => 'آیدی کاربر معتبر نیست',
+            'is_sent' => false,
+        ));
+        die();
+    }
+
+    if($product_id == 0 ){
+        wp_send_json_error(array(
+            'message' => 'آیدی محصول معتبر نیست',
+            'is_sent' => false,
+        ));
+        die();
+    }
+
+    if($regular_price == 0 ){
+        wp_send_json_error(array(
+            'message' => 'مبلغ نمی تواند خالی یا 0 باشد',
+            'is_sent' => false,
+        ));
+        die();
+    }
+    if($sale_price == 0 ){
+        wp_send_json_error(array(
+            'message' => 'مبلغ فروش ویژه نمی تواند خالی یا 0 باشد',
+            'is_sent' => false,
+        ));
+        die();
+    }
+
+    if($stock == 0 ){
+        wp_send_json_error(array(
+            'message' => 'موجودی انبار نمی تواند خالی یا 0 باشد',
+            'is_sent' => false,
+        ));
+        die();
+    }
+    if (!check_product_existence($product_id, $user_id)) {
+
+
+        $mv_ID=insert_product_data_into_table($product_id, $user_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status);
+    
+        if ($mv_ID) {
+            wp_send_json_success(array(
+                'message' => 'Product added successfully!',
+                'is_sent' => true,
+                'mv_ID' => $mv_ID
+            ));
+        } else {
+            echo "خطا در وارد کردن داده!";
+            wp_send_json_error( "خطا در وارد کردن داده!" , $mv_ID);
+            die();
+        }
+    } else {
+        wp_send_json_error(array(
+            'message' => "این محصول برای این کاربر قبلاً ثبت شده است!",
+            'is_sent' => false,
+        ));
+        die();
+    }
+
+   
+}
+add_action('wp_ajax_mv_add_product', 'mv_add_product');
+add_action('wp_ajax_nopriv_mv_add_product', 'mv_add_product');
