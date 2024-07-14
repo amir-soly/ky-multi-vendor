@@ -50,8 +50,8 @@ defined( 'ABSPATH' ) || exit;
             </div>
         </div>
         <hr class="border-gray my-5">
-        <div class="flex-cb">
-            <a href="../add-product/" class="text-secondary font-bold text-xs btn-flex bg-[#D5F7D9] rounded-3xl py-2.5 px-6">
+        <div class="flex-cb mb-6">
+            <a href="/dashboard-seller/add-product/" class="text-secondary font-bold text-xs btn-flex bg-[#D5F7D9] rounded-3xl py-2.5 px-6">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8H15" stroke="#252E49" stroke-width="2" stroke-linecap="round"/><path d="M8 1L8 15" stroke="#252E49" stroke-width="2" stroke-linecap="round"/></svg>
                 <span>افزودن کالای جدید</span>
             </a>
@@ -68,5 +68,79 @@ defined( 'ABSPATH' ) || exit;
                 </div>
             </div>
         </div>
+        <!-- <table class="border-collapse table-fixed w-full">
+            <thead class="max-lg:hidden">
+                <tr>
+                    <th class="px-2 w-1/12"><span class="w-full block border border-gray text-center py-2 rounded-full">ردیف</span></th>
+                    <th class="px-2 w-5/12"><span class="w-full block border border-gray text-center py-2 rounded-full">عنوان</span></th>
+                    <th class="px-2 w-3/12"><span class="w-full block border border-gray text-center py-2 rounded-full">دسته بندی</span></th>
+                    <th class="px-2 w-2/12"><span class="w-full block border border-gray text-center py-2 rounded-full">وضعيت</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="p-2 text-center" data-label="ردیف">1</td>
+                    <td class="p-2" data-label="عنوان">
+                        <div class="flex-cb gap-4">
+                            <img src="http://persiapartstore.test/wp-content/uploads/2023/05/01.Siemens-BSM-1669202183-min.jpg" alt="" width="45" class="rounded-md">
+                            <p>روغن موتور بی‌ ام‌ و TwinPower Turbo Silver | گارانتی اصالت و سلامت فیزیکی کالا</p>
+                        </div>
+                    </td>
+                    <td class="p-2 text-center" data-label="دسته بندی">روغن و مکمل</td>
+                    <td class="p-2 text-center" data-label="وضعيت">تایید شده</td>
+                    <td class="p-2"><a href="#" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
+                </tr>
+            </tbody>
+        </table> -->
+        <table class="border-collapse table-fixed w-full">
+            <thead class="max-lg:hidden">
+                <tr>
+                    <th class="w-1/12 border-b p-3 border-slate-400 text-center font-light">ردیف</th>
+                    <th class="w-5/12 border-b p-3 border-slate-400 text-center font-light">عنوان</th>
+                    <th class="w-2/12 border-b p-3 border-slate-400 text-center font-light">دسته بندی</th>
+                    <th class="w-2/12 border-b p-3 border-slate-400 text-center font-light">وضعیت</th>
+                    <th class="w-2/12 border-b p-3 border-slate-400"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="even:bg-back/30 border-b last:border-b-0">
+                    <td class="p-3 text-center" data-label="ردیف">1</td>
+                    <td class="p-3" data-label="عنوان">
+                        <div class="flex-cb gap-4">
+                            <img src="http://persiapartstore.test/wp-content/uploads/2023/05/01.Siemens-BSM-1669202183-min.jpg" alt="" width="45" class="rounded-md">
+                            <p>روغن موتور بی‌ ام‌ و TwinPower Turbo Silver | گارانتی اصالت و سلامت فیزیکی کالا</p>
+                        </div>
+                    </td>
+                    <td class="p-3 text-center" data-label="دسته بندی">روغن و مکمل</td>
+                    <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25">تایید شده</span></td>
+                    <td class="p-3"><a href="#" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
+                </tr>
+                <tr class="even:bg-back/30 border-b last:border-b-0">
+                    <td class="p-3 text-center" data-label="ردیف">1</td>
+                    <td class="p-3" data-label="عنوان">
+                        <div class="flex-cb gap-4">
+                            <img src="http://persiapartstore.test/wp-content/uploads/2023/05/01.Siemens-BSM-1669202183-min.jpg" alt="" width="45" class="rounded-md">
+                            <p>روغن موتور بی‌ ام‌ و TwinPower Turbo Silver | گارانتی اصالت و سلامت فیزیکی کالا</p>
+                        </div>
+                    </td>
+                    <td class="p-3 text-center" data-label="دسته بندی">روغن و مکمل</td>
+                    <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25">تایید شده</span></td>
+                    <td class="p-3"><a href="#" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
+                </tr>
+                <tr class="even:bg-back/30 border-b last:border-b-0">
+                    <td class="p-3 text-center" data-label="ردیف">1</td>
+                    <td class="p-3" data-label="عنوان">
+                        <div class="flex-cb gap-4">
+                            <img src="http://persiapartstore.test/wp-content/uploads/2023/05/01.Siemens-BSM-1669202183-min.jpg" alt="" width="45" class="rounded-md">
+                            <p>روغن موتور بی‌ ام‌ و TwinPower Turbo Silver | گارانتی اصالت و سلامت فیزیکی کالا</p>
+                        </div>
+                    </td>
+                    <td class="p-3 text-center" data-label="دسته بندی">روغن و مکمل</td>
+                    <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25">تایید شده</span></td>
+                    <td class="p-3"><a href="#" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
