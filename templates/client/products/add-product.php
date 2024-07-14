@@ -11,7 +11,7 @@ function title_like_posts_where($where, $wp_query) {
 
 if (isset($_POST['mv_product_search']) && !empty($_POST['mv_product_search'])) {
         $search_value = $_POST['mv_product_search'];
-        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+        $paged = (get_query_var('page')) ? get_query_var('page') : 1;
         $posts_per_page = 10; 
 
 
