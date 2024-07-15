@@ -1,5 +1,6 @@
 <?php
-function check_product_existence($product_id, $user_id) {
+function check_product_existence($product_id, $user_id)
+{
     global $wpdb;
 
     $table_name = $wpdb->prefix . 'kalayadak24_multivendor_products';
@@ -20,7 +21,8 @@ function check_product_existence($product_id, $user_id) {
     }
 }
 
-function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status) {
+function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status)
+{
     global $wpdb;
 
     $table_name = $wpdb->prefix . 'kalayadak24_multivendor_products';
@@ -62,7 +64,8 @@ function insert_product_data_into_table($product_id, $seller_id, $regular_price,
 }
 
 
-function mv_add_product() {
+function mv_add_product()
+{
 
     $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
     $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
@@ -76,7 +79,7 @@ function mv_add_product() {
 
     $status = "pending";
 
-    if($user_id == 0 ){
+    if ($user_id == 0) {
         wp_send_json_error(array(
             'message' => 'آیدی کاربر معتبر نیست',
             'is_sent' => false,
@@ -84,7 +87,7 @@ function mv_add_product() {
         die();
     }
 
-    if($product_id == 0 ){
+    if ($product_id == 0) {
         wp_send_json_error(array(
             'message' => 'آیدی محصول معتبر نیست',
             'is_sent' => false,
@@ -92,14 +95,14 @@ function mv_add_product() {
         die();
     }
 
-    if($regular_price == 0 ){
+    if ($regular_price == 0) {
         wp_send_json_error(array(
             'message' => 'مبلغ نمی تواند خالی یا 0 باشد',
             'is_sent' => false,
         ));
         die();
     }
-    if($sale_price == 0 ){
+    if ($sale_price == 0) {
         wp_send_json_error(array(
             'message' => 'مبلغ فروش ویژه نمی تواند خالی یا 0 باشد',
             'is_sent' => false,
@@ -107,7 +110,7 @@ function mv_add_product() {
         die();
     }
 
-    if($stock == 0 ){
+    if ($stock == 0) {
         wp_send_json_error(array(
             'message' => 'موجودی انبار نمی تواند خالی یا 0 باشد',
             'is_sent' => false,
@@ -117,8 +120,8 @@ function mv_add_product() {
     if (!check_product_existence($product_id, $user_id)) {
 
 
-        $mv_ID=insert_product_data_into_table($product_id, $user_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status);
-    
+        $mv_ID = insert_product_data_into_table($product_id, $user_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status);
+
         if ($mv_ID) {
             wp_send_json_success(array(
                 'message' => 'Product added successfully!',
@@ -127,7 +130,7 @@ function mv_add_product() {
             ));
         } else {
             echo "خطا در وارد کردن داده!";
-            wp_send_json_error( "خطا در وارد کردن داده!" , $mv_ID);
+            wp_send_json_error("خطا در وارد کردن داده!", $mv_ID);
             die();
         }
     } else {
@@ -137,8 +140,87 @@ function mv_add_product() {
         ));
         die();
     }
-
-   
 }
 add_action('wp_ajax_mv_add_product', 'mv_add_product');
 add_action('wp_ajax_nopriv_mv_add_product', 'mv_add_product');
+
+
+
+add_action('wp_ajax_search_products', 'handle_search_products');
+add_action('wp_ajax_nopriv_search_products', 'handle_search_products'); // برای کاربران مهمان
+
+function handle_search_products()
+{
+    global $wpdb;
+
+    // دریافت و تمیز کردن مقادیر ورودی
+    $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
+    $search_value = isset($_POST['search_query']) ? sanitize_text_field($_POST['search_query']) : '';
+
+    // تنظیم پارامترهای WP_Query برای جستجو
+    $args = array(
+        'post_type' => 'product',
+        'posts_per_page' => 10,
+        'paged' => (get_query_var('paged')) ? get_query_var('paged') : 1,
+        's' => $search_value, // جستجو بر اساس کلمه
+    );
+
+    // اضافه کردن پارامتر دسته‌بندی به کوئری در صورت وجود
+    if ($category_id) {
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'product_cat',
+                'field'    => 'term_id',
+                'terms'    => $category_id,
+            ),
+        );
+    }
+
+    $search = new WP_Query($args);
+    $search_results = $search->have_posts() ? $search->posts : [];
+    // نمایش نتایج
+    if ($search_results) {
+        $mainIDs = [];
+        foreach ($search_results as $product) {
+            $mainIDs[] = $product->ID;
+        }
+
+        // دریافت فروشگاه‌های محصولات از جدول سفارشی
+        $seller_id = get_current_user_id();
+        $result = $wpdb->get_results($wpdb->prepare(
+            "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
+            $seller_id
+        ));
+
+        // ساخت آرایه از شناسه‌های محصول‌های مربوط به فروشنده
+        $seller_product_ids = array_column($result, 'product_id');
+        // نمایش نتایج مربوط به شناسه‌های محصولات فروشنده
+        $matched_products = array_intersect($mainIDs, $seller_product_ids);
+
+        if ($matched_products) {
+            $tittle = [];
+            $terms = [];
+            $status = [];
+            foreach ($matched_products as $product_id) {
+                $tittle[] = get_the_title($product_id);
+                $terms[] = wc_get_product_category_list($product_id);;
+                $status[] = 'pending';
+            }
+
+            wp_send_json_success(array(
+                'message' => 'Product added successfully!',
+                'is_sent' => true,
+                'title' => $tittle,
+                'pro_id' => $matched_products,
+                'terms' => $terms,
+                'status' => $status,
+            ));
+        } else {
+            echo 'No matching products found.';
+        }
+    } else {
+        echo 'No products found.';
+    }
+
+    wp_die(); // پایان اجرای AJAX
+}

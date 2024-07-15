@@ -87,3 +87,43 @@ jQuery(document).ready(function ($) {
     });
   });
 });
+
+
+jQuery(document).ready(function ($) {
+  // تابع debounce برای کاهش تعداد بارهای اجرا
+  function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+  }
+
+  // تابع برای ارسال درخواست AJAX
+  function sendAjaxRequest() {
+      const category_id = $('#pro_list_cat').val();
+      const search_query = $('#pro_list_search_box').val();
+
+      $.ajax({
+        url: 'http://localhost/persia-theme/wp-admin/admin-ajax.php', // URL برای ارسال درخواست AJAX، معمولاً 'admin-ajax.php' در وردپرس
+        type: 'POST',
+          data: {
+              action: 'search_products', // نام اکشن برای شناسایی در وردپرس
+              category_id: category_id,
+              search_query: search_query
+          },
+          success: function (response) {
+              $('#search_results').html(response); // نمایش نتایج جستجو
+          },
+          error: function () {
+              $('#search_results').html('An error occurred.');
+          }
+      });
+  }
+
+  // راه‌اندازی رویداد تغییر در <select>
+  $('#pro_list_cat').on('change', debounce(sendAjaxRequest, 500));
+
+  // راه‌اندازی رویداد تایپ در <input>
+  $('#pro_list_search_box').on('input', debounce(sendAjaxRequest, 500));
+});
