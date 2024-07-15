@@ -87,3 +87,44 @@ jQuery(document).ready(function ($) {
     });
   });
 });
+
+
+jQuery(document).ready(function ($) {
+  // تابع debounce برای کاهش تعداد بارهای اجرا
+  function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+  }
+
+  // تابع برای ارسال درخواست AJAX
+  function sendAjaxRequest(query) {
+      $.ajax({
+          url: 'http://localhost/persia-theme/wp-admin/admin-ajax.php', // URL برای ارسال درخواست AJAX، معمولاً 'admin-ajax.php' در وردپرس
+          type: 'POST',
+          data: {
+              action: 'search_products', // نام اکشن برای شناسایی در وردپرس
+              search_query: query
+          },
+          success: function (response) {
+              $('#search_results').html(response); // نمایش نتایج جستجو
+          },
+          error: function () {
+              $('#search_results').html('An error occurred.');
+          }
+      });
+  }
+
+  // استفاده از debounce برای بهینه‌سازی تایپ
+  const debouncedSearch = debounce(function () {
+      const query = $('#pro_list_search_box').val();
+      if (query.length > 0) {
+          sendAjaxRequest(query);
+      }
+  }, 900); // 500 میلی‌ثانیه تاخیر
+
+  // راه‌اندازی رویداد تایپ
+  $('#pro_list_search_box').on('input', debouncedSearch);
+});
