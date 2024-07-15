@@ -100,13 +100,17 @@ jQuery(document).ready(function ($) {
   }
 
   // تابع برای ارسال درخواست AJAX
-  function sendAjaxRequest(query) {
+  function sendAjaxRequest() {
+      const category_id = $('#pro_list_cat').val();
+      const search_query = $('#pro_list_search_box').val();
+
       $.ajax({
-          url: 'http://localhost/persia-theme/wp-admin/admin-ajax.php', // URL برای ارسال درخواست AJAX، معمولاً 'admin-ajax.php' در وردپرس
-          type: 'POST',
+        url: 'http://localhost/persia-theme/wp-admin/admin-ajax.php', // URL برای ارسال درخواست AJAX، معمولاً 'admin-ajax.php' در وردپرس
+        type: 'POST',
           data: {
               action: 'search_products', // نام اکشن برای شناسایی در وردپرس
-              search_query: query
+              category_id: category_id,
+              search_query: search_query
           },
           success: function (response) {
               $('#search_results').html(response); // نمایش نتایج جستجو
@@ -117,14 +121,9 @@ jQuery(document).ready(function ($) {
       });
   }
 
-  // استفاده از debounce برای بهینه‌سازی تایپ
-  const debouncedSearch = debounce(function () {
-      const query = $('#pro_list_search_box').val();
-      if (query.length > 0) {
-          sendAjaxRequest(query);
-      }
-  }, 900); // 500 میلی‌ثانیه تاخیر
+  // راه‌اندازی رویداد تغییر در <select>
+  $('#pro_list_cat').on('change', debounce(sendAjaxRequest, 500));
 
-  // راه‌اندازی رویداد تایپ
-  $('#pro_list_search_box').on('input', debouncedSearch);
+  // راه‌اندازی رویداد تایپ در <input>
+  $('#pro_list_search_box').on('input', debounce(sendAjaxRequest, 500));
 });

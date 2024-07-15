@@ -153,21 +153,31 @@ function handle_search_products()
 {
     global $wpdb;
 
-    // دریافت و تمیز کردن مقدار جستجو
-    $search_value = sanitize_text_field($_POST['search_query']);
-
-    // تعیین پارامترهای جستجو
-    $posts_per_page = -1;
+    // دریافت و تمیز کردن مقادیر ورودی
+    $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
+    $search_value = isset($_POST['search_query']) ? sanitize_text_field($_POST['search_query']) : '';
 
     // تنظیم پارامترهای WP_Query برای جستجو
     $args = array(
         'post_type' => 'product',
-        's' => $search_value, // استفاده از 's' برای جستجو در عنوان و محتوا
-        'posts_per_page' => $posts_per_page,
+        'posts_per_page' => 10,
+        'paged' => (get_query_var('paged')) ? get_query_var('paged') : 1,
+        's' => $search_value, // جستجو بر اساس کلمه
     );
+
+    // اضافه کردن پارامتر دسته‌بندی به کوئری در صورت وجود
+    if ($category_id) {
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'product_cat',
+                'field'    => 'term_id',
+                'terms'    => $category_id,
+            ),
+        );
+    }
+
     $search = new WP_Query($args);
     $search_results = $search->have_posts() ? $search->posts : [];
-
     // نمایش نتایج
     if ($search_results) {
         $mainIDs = [];
