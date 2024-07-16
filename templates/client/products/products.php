@@ -24,11 +24,11 @@ $product_categories = get_terms(array(
     <div>
         <p class="text-sm text-paragraph mb-4">جستجو و فیلتر</p>
         <div class="mb-6">
-            <p class="text-xxs mb-3">گروه کالایی:</p>
-            <div class="flex items-stretch gap-4">
-            <div class="w-1/4">
+            <div class="flex items-end gap-4">
+                <div class="w-1/4">
+                    <label for="pro_list_cat" class="text-xxs block mb-3">گروه کالایی:</label>
                     <select name="pro_list_cat" id="pro_list_cat" class="w-full px-3 py-2.5 rounded-3xl !border-gray appearance-select">
-                    <option value="">انتخاب کنید</option>
+                        <option value="">انتخاب کنید</option>
                         <?php 
 
                         foreach ($product_categories as $category ) {
@@ -38,14 +38,16 @@ $product_categories = get_terms(array(
                         ?>
                     </select>
                 </div>
-                <div class="w-3/4 relative">
-                    <input type="text" id="pro_list_search_box" name="pro_list_search_box" class="bg-white rounded-3xl w-full !border-gray !pr-16" placeholder="نام محصول">
-                    <div class="absolute right-3 top-1/2 -translate-y-1/2">
-                        <span class="border-l border-lite-gray pl-4 block">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 19 19" fill="none">
-                                <path d="M18.3 17.3481L13.7 13.3301C15.1 11.9581 16 10.0961 16 7.9401C16 3.6281 12.4 0.100098 8 0.100098C3.6 0.100098 0 3.6281 0 7.9401C0 12.2521 3.6 15.7801 8 15.7801C9.9 15.7801 11.6 15.0941 13 14.0161L17.7 18.0341L18.3 17.3481ZM1 7.9401C1 4.1181 4.1 1.0801 8 1.0801C11.9 1.0801 15 4.1181 15 7.9401C15 11.7621 11.9 14.8001 8 14.8001C4.1 14.8001 1 11.7621 1 7.9401Z" fill="#606060" />
-                            </svg>
-                        </span>
+                <div class="w-3/4">
+                    <div class="relative">
+                        <input type="text" id="pro_list_search_box" name="pro_list_search_box" class="bg-white rounded-3xl w-full !border-gray !pr-16" placeholder="نام محصول">
+                        <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                            <span class="border-l border-lite-gray pl-4 block">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 19 19" fill="none">
+                                    <path d="M18.3 17.3481L13.7 13.3301C15.1 11.9581 16 10.0961 16 7.9401C16 3.6281 12.4 0.100098 8 0.100098C3.6 0.100098 0 3.6281 0 7.9401C0 12.2521 3.6 15.7801 8 15.7801C9.9 15.7801 11.6 15.0941 13 14.0161L17.7 18.0341L18.3 17.3481ZM1 7.9401C1 4.1181 4.1 1.0801 8 1.0801C11.9 1.0801 15 4.1181 15 7.9401C15 11.7621 11.9 14.8001 8 14.8001C4.1 14.8001 1 11.7621 1 7.9401Z" fill="#606060" />
+                                </svg>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,10 +74,7 @@ $product_categories = get_terms(array(
         <hr class="border-gray my-5">
         <div class="flex-cb mb-6">
             <a href="/dashboard-seller/add-product/" class="text-secondary font-bold text-xs btn-flex bg-[#D5F7D9] rounded-3xl py-2.5 px-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M1 8H15" stroke="#252E49" stroke-width="2" stroke-linecap="round" />
-                    <path d="M8 1L8 15" stroke="#252E49" stroke-width="2" stroke-linecap="round" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8H15" stroke="#252E49" stroke-width="2" stroke-linecap="round"/><path d="M8 1L8 15" stroke="#252E49" stroke-width="2" stroke-linecap="round"/></svg>
                 <span>افزودن کالای جدید</span>
             </a>
             <div class="flex items-center gap-5">
@@ -119,10 +118,10 @@ $product_categories = get_terms(array(
         <table class="border-collapse table-fixed w-full">
             <thead class="max-lg:hidden">
                 <tr>
-                    <th class="w-1/12 border-b p-3 border-slate-400 text-center font-light">ردیف</th>
-                    <th class="w-5/12 border-b p-3 border-slate-400 text-center font-light">عنوان</th>
-                    <th class="w-2/12 border-b p-3 border-slate-400 text-center font-light">دسته بندی</th>
-                    <th class="w-2/12 border-b p-3 border-slate-400 text-center font-light">وضعیت</th>
+                    <th class="w-1/12 border-b p-3 border-slate-400 text-center">ردیف</th>
+                    <th class="w-5/12 border-b p-3 border-slate-400 text-center">عنوان</th>
+                    <th class="w-2/12 border-b p-3 border-slate-400 text-center">دسته بندی</th>
+                    <th class="w-2/12 border-b p-3 border-slate-400 text-center">وضعیت</th>
                     <th class="w-2/12 border-b p-3 border-slate-400"></th>
                 </tr>
             </thead>
@@ -155,7 +154,7 @@ $product_categories = get_terms(array(
                     
                      ?>
                     <tr class="even:bg-back/30 border-b last:border-b-0">
-                        <td class="p-3 text-center" data-label="ردیف"><?= $counter++;?></td>
+                        <td class="p-3 text-center font-light" data-label="ردیف"><?= $counter++;?></td>
                         <td class="p-3" data-label="عنوان">
                             <div class="flex-cb gap-4">
                                 <img src="http://persiapartstore.test/wp-content/uploads/2023/05/01.Siemens-BSM-1669202183-min.jpg" alt="" width="45" class="rounded-md">
