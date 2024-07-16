@@ -22,6 +22,7 @@ add_filter('template_include', 'load_dashboard_seller_template');
 function dashboard_seller_endpoints() {
     add_rewrite_endpoint('products', EP_PAGES);
     add_rewrite_endpoint('add-product', EP_PAGES);
+    add_rewrite_endpoint('seller-orders', EP_PAGES);
     
     // Ensure the endpoints are properly flushed
     flush_rewrite_rules();
