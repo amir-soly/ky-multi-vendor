@@ -165,7 +165,7 @@ function handle_search_products()
     // تنظیم پارامترهای WP_Query برای جستجو
     $args = array(
         'post_type' => 'product',
-        'posts_per_page' => 100,
+        'posts_per_page' => -1,
         'paged' => (get_query_var('paged')) ? get_query_var('paged') : 1,
         's' => $search_value, // جستجو بر اساس کلمه
     );
