@@ -1,4 +1,9 @@
 <?php
+
+
+
+
+
 function check_product_existence($product_id, $user_id)
 {
     global $wpdb;
@@ -146,21 +151,21 @@ add_action('wp_ajax_nopriv_mv_add_product', 'mv_add_product');
 
 
 
-add_action('wp_ajax_search_products', 'handle_search_products');
-add_action('wp_ajax_nopriv_search_products', 'handle_search_products'); // برای کاربران مهمان
+
 
 function handle_search_products()
 {
     global $wpdb;
 
     // دریافت و تمیز کردن مقادیر ورودی
+    $action = isset($_POST['action_type']) ? sanitize_text_field($_POST['action_type']) : '';
     $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
     $search_value = isset($_POST['search_query']) ? sanitize_text_field($_POST['search_query']) : '';
 
     // تنظیم پارامترهای WP_Query برای جستجو
     $args = array(
         'post_type' => 'product',
-        'posts_per_page' => 10,
+        'posts_per_page' => 100,
         'paged' => (get_query_var('paged')) ? get_query_var('paged') : 1,
         's' => $search_value, // جستجو بر اساس کلمه
     );
@@ -178,49 +183,88 @@ function handle_search_products()
 
     $search = new WP_Query($args);
     $search_results = $search->have_posts() ? $search->posts : [];
-    // نمایش نتایج
-    if ($search_results) {
-        $mainIDs = [];
-        foreach ($search_results as $product) {
-            $mainIDs[] = $product->ID;
+
+    if ($action == 'list_products') {
+        if ($search_results) {
+            $mainIDs = [];
+            foreach ($search_results as $product) {
+                $mainIDs[] = $product->ID;
+            }
+
+            // دریافت فروشگاه‌های محصولات از جدول سفارشی
+            $seller_id = get_current_user_id();
+            $result = $wpdb->get_results($wpdb->prepare(
+                "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
+                $seller_id
+            ));
+
+            // ساخت آرایه از شناسه‌های محصول‌های مربوط به فروشنده
+            $seller_product_ids = array_column($result, 'product_id');
+            // نمایش نتایج مربوط به شناسه‌های محصولات فروشنده
+            $matched_products = array_intersect($mainIDs, $seller_product_ids);
+            if ($matched_products) {
+                $products = [];
+
+                foreach ($matched_products as $product_id) {
+
+                    $products[] = array(
+                        'seller_id' => get_current_user_id(),
+                        'product_id' => $product_id,
+                        'title' => get_the_title($product_id),
+                        'thumbnail' => get_the_post_thumbnail_url($product_id, 'thumbnail'),
+                        'terms' => wc_get_product_category_list($product_id),
+                        'status' => in_array($product_id, $seller_product_ids) ? 'exists' : 'not_exists',
+
+                    );
+                }
+
+                wp_send_json_success(array(
+                    'is_sent' => true,
+                    'products' => $products,
+                ));
+            } else {
+                wp_send_json_error('No matching products found.');
+            }
+        } else {
+            wp_send_json_error('No products found.');
         }
+    } elseif ($action == 'add_product') {
+        if ($search_results) {
+            // دریافت فروشگاه‌های محصولات از جدول سفارشی
+            $seller_id = get_current_user_id();
+            $result = $wpdb->get_results($wpdb->prepare(
+                "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
+                $seller_id
+            ));
 
-        // دریافت فروشگاه‌های محصولات از جدول سفارشی
-        $seller_id = get_current_user_id();
-        $result = $wpdb->get_results($wpdb->prepare(
-            "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
-            $seller_id
-        ));
+            // ساخت آرایه از شناسه‌های محصول‌های مربوط به فروشنده
+            $seller_product_ids = array_column($result, 'product_id');
 
-        // ساخت آرایه از شناسه‌های محصول‌های مربوط به فروشنده
-        $seller_product_ids = array_column($result, 'product_id');
-        // نمایش نتایج مربوط به شناسه‌های محصولات فروشنده
-        $matched_products = array_intersect($mainIDs, $seller_product_ids);
-
-        if ($matched_products) {
-            $tittle = [];
-            $terms = [];
-            $status = [];
-            foreach ($matched_products as $product_id) {
-                $tittle[] = get_the_title($product_id);
-                $terms[] = wc_get_product_category_list($product_id);;
-                $status[] = 'pending';
+            $products = [];
+            foreach ($search_results as $product) {
+                $product_id = $product->ID;
+                $products[] = array(
+                    'seller_id' => get_current_user_id(),
+                    'product_id' => $product_id,
+                    'title' => get_the_title($product_id),
+                    'thumbnail' => get_the_post_thumbnail_url($product_id, 'thumbnail'),
+                    'price' => wc_price(wc_get_product($product->ID)->get_price()),
+                    'terms' => wc_get_product_category_list($product_id),
+                    'exists' => in_array($product_id, $seller_product_ids) ? 'true' : 'false'
+                );
             }
 
             wp_send_json_success(array(
-                'message' => 'Product added successfully!',
+                'message' => 'Products retrieved successfully!',
                 'is_sent' => true,
-                'title' => $tittle,
-                'pro_id' => $matched_products,
-                'terms' => $terms,
-                'status' => $status,
+                'products' => $products,
             ));
         } else {
-            echo 'No matching products found.';
+            wp_send_json_error('No products found.');
         }
-    } else {
-        echo 'No products found.';
     }
 
     wp_die(); // پایان اجرای AJAX
 }
+add_action('wp_ajax_search_products', 'handle_search_products');
+add_action('wp_ajax_nopriv_search_products', 'handle_search_products');

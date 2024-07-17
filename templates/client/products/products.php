@@ -125,7 +125,7 @@ $product_categories = get_terms(array(
                     <th class="w-2/12 border-b p-3 border-slate-400"></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="'product_box">
                 <?php
                 $counter=1;
                 foreach ($result as $row) {
@@ -157,7 +157,7 @@ $product_categories = get_terms(array(
                         <td class="p-3 text-center font-light" data-label="ردیف"><?= $counter++;?></td>
                         <td class="p-3" data-label="عنوان">
                             <div class="flex-cb gap-4">
-                                <img src="http://persiapartstore.test/wp-content/uploads/2023/05/01.Siemens-BSM-1669202183-min.jpg" alt="" width="45" class="rounded-md">
+                                <img src="<?= get_the_post_thumbnail_url($product_id, 'thumbnail'); ?>" alt="" width="45" class="rounded-md">
                                 <p><?= get_the_title($product_id) ?></p>
                             </div>
                         </td>
