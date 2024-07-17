@@ -6,37 +6,34 @@ defined('ABSPATH') || exit;
     <p class="text-xs mb-5">محصولی که قصد فروش آن را دارید، جستجو کنید. در غیر این‌صورت از "ایجاد کالای جدید" اقدام به درج کالای خود کنید</p>
     <div class="bg-back p-5 rounded-3xl mb-9">
         <p class="mb-4 text-xs">جستجوی کالا در میان کالاهای دیجی‌کالا بر اساس:</p>
-        <div class="w-3/4 relative">
-            <input type="text" id="mv_product_search" name="mv_product_search" class="bg-white rounded-3xl w-full border-none !pr-16" placeholder="نام محصول">
-            <div class="absolute right-3 top-1/2 -translate-y-1/2">
-                <span class="border-l border-lite-gray pl-4 block">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 19 19" fill="none">
-                        <path d="M18.3 17.3481L13.7 13.3301C15.1 11.9581 16 10.0961 16 7.9401C16 3.6281 12.4 0.100098 8 0.100098C3.6 0.100098 0 3.6281 0 7.9401C0 12.2521 3.6 15.7801 8 15.7801C9.9 15.7801 11.6 15.0941 13 14.0161L17.7 18.0341L18.3 17.3481ZM1 7.9401C1 4.1181 4.1 1.0801 8 1.0801C11.9 1.0801 15 4.1181 15 7.9401C15 11.7621 11.9 14.8001 8 14.8001C4.1 14.8001 1 11.7621 1 7.9401Z" fill="#606060" />
-                    </svg>
-                </span>
+        <form id="mv_search_prodcu_form" class="flex-cb gap-4">
+            <div class="w-3/4 relative">
+                <input type="text" id="mv_product_search" name="mv_product_search" class="bg-white rounded-3xl w-full border-none !pr-16" placeholder="نام محصول">
+                <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                    <span class="border-l border-lite-gray pl-4 block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 19 19" fill="none"><path d="M18.3 17.3481L13.7 13.3301C15.1 11.9581 16 10.0961 16 7.9401C16 3.6281 12.4 0.100098 8 0.100098C3.6 0.100098 0 3.6281 0 7.9401C0 12.2521 3.6 15.7801 8 15.7801C9.9 15.7801 11.6 15.0941 13 14.0161L17.7 18.0341L18.3 17.3481ZM1 7.9401C1 4.1181 4.1 1.0801 8 1.0801C11.9 1.0801 15 4.1181 15 7.9401C15 11.7621 11.9 14.8001 8 14.8001C4.1 14.8001 1 11.7621 1 7.9401Z" fill="#606060" /></svg>
+                    </span>
+                </div>
             </div>
-        </div>
-        <button name="mv_search_submit" id="mv_search_submit" ajax-url="<?= admin_url('admin-ajax.php') ?>" class="bg-secondary text-white rounded-3xl py-2.5 w-1/4">جستجو</button>
+            <button name="mv_search_submit" id="mv_search_submit" class="bg-secondary text-white rounded-3xl py-2.5 w-1/4">جستجو</button>
+        </form>
     </div>
 
-
-    <div>
+    <div id="product_results_container" class="hidden">
         <div class="flex-cb">
             <h3 class="text-secondary font-bold text-base">نتایج جستجو</h3>
             <p class="text-sm">
                 <span>تعداد نتایج:</span>
-                <span><?= $result_count; ?> مورد</span>
+                <span id="results_count">مورد</span>
             </p>
         </div>
         <hr class="border-gray my-5">
-        <div id="product-results">
-           
-        </div>
+        <div id="product_results"></div>
     </div>
-
-
 </div>
 <style>
+
+    /* پس زمینه تیره برای پاپ آپ */
     #popup_overlay {
         display: none;
         position: fixed;
@@ -48,6 +45,7 @@ defined('ABSPATH') || exit;
         z-index: 999;
     }
 
+    /* باکس پاپ آپ */
     #add_product_popup {
         display: none;
         position: fixed;
@@ -62,6 +60,7 @@ defined('ABSPATH') || exit;
         z-index: 1000;
     }
 
+    /* استایل فیلدها */
     .row {
         margin-bottom: 15px;
     }
@@ -71,14 +70,14 @@ defined('ABSPATH') || exit;
         margin-bottom: 5px;
     }
 
-    .row input,
-    .row select {
+    .row input, .row select {
         width: calc(100% - 20px);
         padding: 8px 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
     }
 
+    /* دکمه سابمیت */
     #mv_submit_product {
         display: inline-block;
         padding: 10px 20px;

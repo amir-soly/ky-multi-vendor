@@ -1,89 +1,81 @@
 jQuery(document).ready(function ($) {
-  jQuery(document).ready(function ($) {
-    $("#mv_search_submit").click(function (e) {
-      e.preventDefault(); // جلوگیری از ارسال فرم به صورت پیش‌فرض
+    // event listener for the search submit button
+    $('#mv_search_prodcu_form').submit(function (e) {
+        e.preventDefault();
 
-      let searchValue = $("#mv_product_search").val().trim();
-      let ajaxUrl = $(this).attr("ajax-url");
+        let searchValue = $('#mv_product_search').val().trim();
 
-      if (searchValue === "") {
-        alert("لطفاً یک محصول را وارد کنید.");
-        return;
-      }
+        if (searchValue === '') {
+            alert('لطفاً نام یک محصول را وارد کنید.');
+            return;
+        }
 
-      $.ajax({
-        url: ajaxUrl, // آدرس URL فایل PHP که درخواست را پردازش می‌کند
-        type: "POST",
-        data: {
-          action: "search_products", // نام اکشن برای وردپرس
-          search_query: searchValue,
-          action_type: "add_product",
-        },
-        success: function (response) {
-          if (response.data.is_sent) {
-            displayProducts(response.data.products);
-            console.log(response.data.products);
-          } else {
-            $("#product-results").html("<p>No products found.</p>");
-          }
-        },
-        error: function (xhr, status, error) {
-          console.error(error);
-          $("#product-results").html(
-            "<p>Error occurred while fetching products.</p>"
-          );
-        },
-      });
+        // perform AJAX request
+        $.ajax({
+            url: stm_wpcfto_ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'search_products',
+                search_query: searchValue,
+                action_type: 'add_product',
+            },
+            success: function (response) {
+                $('#product_results_container').show();
+                $('#results_count').html(`${response.data.products.length} مورد`);
+
+                if (response.success) {
+                    displayProducts(response.data.products);
+                } else {
+                    $('#product_results').html('<p class="text-center text-xl">محصولی یافت نشد!</p>');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#product_results_container').show();
+
+                $('#product_results').html('<p class="text-center text-xl">مشکلی پیش آمده دوباره امتحان کنید.</p>');
+            },
+        });
     });
 
+    // function to display products in the results section
     function displayProducts(products) {
-      var html = "";
-      products.forEach(function (product) {
-        html += `
+        let html = '';
+        products.forEach(function (product) {
+            let addProductBtn;
+
+            if (product.exists == 'true') {
+                addProductBtn = `<button class="py-2.5 px-10 text-sm rounded-3xl font-bold bg-primary text-secondary transition-all">فروشنده هستید</button>`;
+            } else {
+                addProductBtn = `<button class="py-2.5 px-10 text-sm rounded-3xl font-bold border border-gray transition-all hover:bg-primary hover:text-secondary hover:border-primary mv_add_product_too" product-id="${product.product_id}" user-id="${product.seller_id}">شما هم بفروشید</button>`;
+            }
+            html += `
                 <div class="mb-6 pb-6 border-b border-lite-gray last:border-none">
                     <div class="flex-cb mb-6">
                         <div class="btn-flex">
-                            <img src="${product.thumbnail}" alt="${
-          product.title
-        }" width="90">
-                            <p class="text-xs text-paragraph">${
-                              product.title
-                            }</p>
+                            <img src="${product.thumbnail}" alt="${product.title}" width="90">
+                            <p class="text-xs text-paragraph">${product.title}</p>
                         </div>
-                        <button class="py-2.5 px-10 text-sm rounded-3xl font-bold border border-gray transition-all hover:bg-primary hover:text-secondary hover:border-primary mv_add_product_too exists_${
-                          product.exists
-                        }" product-id="${product.product_id}" ${
-          product.exists == "true" ? "disabled" : ""
-        } user-id="${product.seller_id}" ajax-url="" wp-nonce="">${
-          product.exists == "true" ? "این کالا را می فروشید" : "شما هم بفروشید"
-        }</button>
+                        ${addProductBtn}
                     </div>
                     <div class="flex items-center gap-16">
                         <div>
                             <span class="text-xs text-paragraph">گروه:</span>
-                            <span class="text-sm text-secondary">${
-                              product.terms
-                            }</span>
+                            <span class="text-sm text-secondary">${product.terms}</span>
                         </div>
                         <div>
                             <span class="text-xs text-paragraph">وضعیت جاری:</span>
-                            <span class="text-sm text-secondary">${
-                              product.exists == "true" ? "موجود" : "غیر موجود"
-                            }</span>
+                            <span class="text-sm text-secondary">${product.exists == 'true' ? 'موجود' : 'غیر موجود'}</span>
                         </div>
                         <div>
                             <span class="text-xs text-paragraph">قیمت:</span>
-                            <span class="text-sm text-secondary">${
-                              product.price
-                            }</span>
+                            <span class="text-sm text-secondary">${product.price}</span>
                         </div>
                     </div>
                 </div>
             `;
-      });
-      $("#product-results").html(html);
+        });
+        $('#product_results').html(html);
     }
-  });
 
   $(".mv_add_product_too").on("click", function (e) {
     e.preventDefault();
