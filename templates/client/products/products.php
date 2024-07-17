@@ -125,7 +125,7 @@ $product_categories = get_terms(array(
                     <th class="w-2/12 border-b p-3 border-slate-400"></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="'product_box">
                 <?php
                 $counter=1;
                 foreach ($result as $row) {

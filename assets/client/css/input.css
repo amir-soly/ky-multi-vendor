@@ -93,3 +93,10 @@
     #mv_submit_product:hover {
         background: #005a87;
     }
+
+
+    .exists_true {
+        cursor: not-allowed !important;
+        background-color: #fda701 !important;
+        color: #000 !important;
+    }
