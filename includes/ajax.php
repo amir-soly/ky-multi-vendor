@@ -160,7 +160,7 @@ function handle_search_products()
     // تنظیم پارامترهای WP_Query برای جستجو
     $args = array(
         'post_type' => 'product',
-        'posts_per_page' => 10,
+        'posts_per_page' => -1,
         'paged' => (get_query_var('paged')) ? get_query_var('paged') : 1,
         's' => $search_value, // جستجو بر اساس کلمه
     );
@@ -198,22 +198,28 @@ function handle_search_products()
         $matched_products = array_intersect($mainIDs, $seller_product_ids);
 
         if ($matched_products) {
-            $tittle = [];
-            $terms = [];
-            $status = [];
+
+            $products=[];
             foreach ($matched_products as $product_id) {
-                $tittle[] = get_the_title($product_id);
-                $terms[] = wc_get_product_category_list($product_id);;
-                $status[] = 'pending';
+                $thumbnail_url = get_the_post_thumbnail_url($product_id, 'thumbnail');
+                $tittle= get_the_title($product_id);
+                $terms = wc_get_product_category_list($product_id);;
+                $status= 'pending';
+                $products[] = 
+                    array(
+                        'seller_id'=> $seller_id,
+                        'pro_id'=>$product_id,
+                        'thumbnail' =>  $thumbnail_url,
+                        'tittle'=> $tittle,
+                        'terms' => $terms,
+                        'status' =>$status,
+                    );
             }
 
             wp_send_json_success(array(
-                'message' => 'Product added successfully!',
                 'is_sent' => true,
-                'title' => $tittle,
-                'pro_id' => $matched_products,
-                'terms' => $terms,
-                'status' => $status,
+                'products' =>  $products,
+
             ));
         } else {
             echo 'No matching products found.';
