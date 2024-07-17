@@ -1,8 +1,5 @@
 <?php
-
-
-
-
+defined('ABSPATH') || exit;
 
 function check_product_existence($product_id, $user_id)
 {
@@ -165,7 +162,7 @@ function handle_search_products()
     // تنظیم پارامترهای WP_Query برای جستجو
     $args = array(
         'post_type' => 'product',
-        'posts_per_page' => -1,
+        'posts_per_page' => 30,
         'paged' => (get_query_var('paged')) ? get_query_var('paged') : 1,
         's' => $search_value, // جستجو بر اساس کلمه
     );
@@ -219,7 +216,6 @@ function handle_search_products()
                 }
 
                 wp_send_json_success(array(
-                    'is_sent' => true,
                     'products' => $products,
                 ));
             } else {
@@ -255,8 +251,6 @@ function handle_search_products()
             }
 
             wp_send_json_success(array(
-                'message' => 'Products retrieved successfully!',
-                'is_sent' => true,
                 'products' => $products,
             ));
         } else {

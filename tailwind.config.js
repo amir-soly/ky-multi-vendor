@@ -5,7 +5,8 @@ module.exports = {
     'dashboard-seller.php',
     'templates/client/products/products.php',
     'templates/client/products/add-product.php',
-    'templates/client/orders.php'
+    'templates/client/orders.php',
+    'assets/client/js/add-product.js'
   ],
   theme: {
     extend: {
