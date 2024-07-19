@@ -46,7 +46,7 @@ jQuery(document).ready(function ($) {
             if (product.exists == 'true') {
                 addProductBtn = `<button class="py-2.5 px-10 text-sm rounded-3xl font-bold bg-primary text-secondary transition-all">فروشنده هستید</button>`;
             } else {
-                addProductBtn = `<button class="py-2.5 px-10 text-sm rounded-3xl font-bold border border-gray transition-all hover:bg-primary hover:text-secondary hover:border-primary mv_add_product_too" product-id="${product.product_id}" user-id="${product.seller_id}">شما هم بفروشید</button>`;
+                addProductBtn = `<button class="mv_add_product_too py-2.5 px-10 text-sm rounded-3xl font-bold border border-gray transition-all hover:bg-primary hover:text-secondary hover:border-primary" product-id="${product.product_id}" user-id="${product.seller_id}">شما هم بفروشید</button>`;
             }
             html += `
                 <div class="mb-6 pb-6 border-b border-lite-gray last:border-none">
@@ -79,8 +79,8 @@ jQuery(document).ready(function ($) {
 
 
 
-    
-  $(".mv_add_product_too").on("click", function (e) {
+
+  $(document).on("click", ".mv_add_product_too", function (e) {
     e.preventDefault();
 
     // دریافت مقادیر data از دکمه
@@ -119,7 +119,6 @@ jQuery(document).ready(function ($) {
     // دریافت مقادیر data از دکمه سابمیت
     let productId = $(this).data("product-id");
     let userId = $(this).data("user-id");
-    let ajaxUrl = $(this).data("ajax-url");
     let nonce = $(this).data("wp-nonce");
 
     // دریافت مقادیر فیلدهای فرم
