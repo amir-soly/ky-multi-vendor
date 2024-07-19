@@ -68,7 +68,6 @@ function insert_product_data_into_table($product_id, $seller_id, $regular_price,
 
 function mv_add_product()
 {
-
     $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
     $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
     $regular_price = isset($_POST['regular_price']) ? floatval($_POST['regular_price']) : 0;
@@ -149,25 +148,27 @@ add_action('wp_ajax_nopriv_mv_add_product', 'mv_add_product');
 
 
 
-
-function handle_search_products()
-{
+function handle_search_products() {
     global $wpdb;
 
-    // دریافت و تمیز کردن مقادیر ورودی
+    // sanitize input values
     $action = isset($_POST['action_type']) ? sanitize_text_field($_POST['action_type']) : '';
     $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
     $search_value = isset($_POST['search_query']) ? sanitize_text_field($_POST['search_query']) : '';
 
-    // تنظیم پارامترهای WP_Query برای جستجو
+    // set up WP_Query parameters for search
     $args = array(
         'post_type' => 'product',
         'posts_per_page' => 30,
         'paged' => (get_query_var('paged')) ? get_query_var('paged') : 1,
-        's' => $search_value, // جستجو بر اساس کلمه
     );
 
-    // اضافه کردن پارامتر دسته‌بندی به کوئری در صورت وجود
+    // if search value is not empty, add it to the query parameters
+    if (!empty($search_value)) {
+        $args['s'] = $search_value;
+    }
+
+    // add category parameter to query if exists
     if ($category_id) {
         $args['tax_query'] = array(
             array(
@@ -183,41 +184,30 @@ function handle_search_products()
 
     if ($action == 'list_products') {
         if ($search_results) {
-            $mainIDs = [];
-            foreach ($search_results as $product) {
-                $mainIDs[] = $product->ID;
-            }
-
-            // دریافت فروشگاه‌های محصولات از جدول سفارشی
+            $mainIDs = wp_list_pluck($search_results, 'ID');
             $seller_id = get_current_user_id();
             $result = $wpdb->get_results($wpdb->prepare(
                 "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
                 $seller_id
             ));
 
-            // ساخت آرایه از شناسه‌های محصول‌های مربوط به فروشنده
+            // build an array of product IDs related to the seller
             $seller_product_ids = array_column($result, 'product_id');
-            // نمایش نتایج مربوط به شناسه‌های محصولات فروشنده
             $matched_products = array_intersect($mainIDs, $seller_product_ids);
+
             if ($matched_products) {
-                $products = [];
-
-                foreach ($matched_products as $product_id) {
-
-                    $products[] = array(
+                $products = array_map(function($product_id) use ($seller_product_ids) {
+                    return array(
                         'seller_id' => get_current_user_id(),
                         'product_id' => $product_id,
                         'title' => get_the_title($product_id),
                         'thumbnail' => get_the_post_thumbnail_url($product_id, 'thumbnail'),
                         'terms' => wc_get_product_category_list($product_id),
                         'status' => in_array($product_id, $seller_product_ids) ? 'exists' : 'not_exists',
-
                     );
-                }
+                }, $matched_products);
 
-                wp_send_json_success(array(
-                    'products' => $products,
-                ));
+                wp_send_json_success(array('products' => $products));
             } else {
                 wp_send_json_error('No matching products found.');
             }
@@ -226,39 +216,35 @@ function handle_search_products()
         }
     } elseif ($action == 'add_product') {
         if ($search_results) {
-            // دریافت فروشگاه‌های محصولات از جدول سفارشی
             $seller_id = get_current_user_id();
             $result = $wpdb->get_results($wpdb->prepare(
                 "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
                 $seller_id
             ));
 
-            // ساخت آرایه از شناسه‌های محصول‌های مربوط به فروشنده
             $seller_product_ids = array_column($result, 'product_id');
 
-            $products = [];
-            foreach ($search_results as $product) {
+            $products = array_map(function($product) use ($seller_product_ids) {
                 $product_id = $product->ID;
-                $products[] = array(
+                $wc_product = wc_get_product($product_id);
+                return array(
                     'seller_id' => get_current_user_id(),
                     'product_id' => $product_id,
                     'title' => get_the_title($product_id),
                     'thumbnail' => get_the_post_thumbnail_url($product_id, 'thumbnail'),
-                    'price' => wc_price(wc_get_product($product->ID)->get_price()),
+                    'price' => wc_price($wc_product->get_price()),
                     'terms' => wc_get_product_category_list($product_id),
-                    'exists' => in_array($product_id, $seller_product_ids) ? 'true' : 'false'
+                    'exists' => in_array($product_id, $seller_product_ids) ? 'true' : 'false',
                 );
-            }
+            }, $search_results);
 
-            wp_send_json_success(array(
-                'products' => $products,
-            ));
+            wp_send_json_success(array('products' => $products));
         } else {
             wp_send_json_error('No products found.');
         }
     }
 
-    wp_die(); // پایان اجرای AJAX
+    wp_die(); // end AJAX execution
 }
 add_action('wp_ajax_search_products', 'handle_search_products');
 add_action('wp_ajax_nopriv_search_products', 'handle_search_products');

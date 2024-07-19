@@ -115,7 +115,7 @@ $product_categories = get_terms(array(
                 </tr>
             </tbody>
         </table> -->
-        <table class="border-collapse table-fixed w-full">
+        <table class="border-collapse table-fixed w-full" id="products_table">
             <thead class="max-lg:hidden">
                 <tr>
                     <th class="w-1/12 border-b p-3 border-slate-400 text-center">ردیف</th>
@@ -125,9 +125,9 @@ $product_categories = get_terms(array(
                     <th class="w-2/12 border-b p-3 border-slate-400"></th>
                 </tr>
             </thead>
-            <tbody id="'product_box">
+            <tbody id="products_list">
                 <?php
-                $counter=1;
+                $counter = 1;
                 foreach ($result as $row) {
                     $product_id = $row->product_id;
                     $status='';
@@ -141,9 +141,9 @@ $product_categories = get_terms(array(
                         case 'rejected':
                             $status = 'رد شده' ;
                             break;
-                     }
+                    }
 
-                     $url = add_query_arg(
+                    $url = add_query_arg(
                         array(
                             'action' => 'edit',
                             'seller' => $row->seller_id,
@@ -152,7 +152,7 @@ $product_categories = get_terms(array(
                         home_url('dashboard-seller/add-product')
                     );
                     
-                     ?>
+                    ?>
                     <tr class="even:bg-back/30 border-b last:border-b-0">
                         <td class="p-3 text-center font-light" data-label="ردیف"><?= $counter++;?></td>
                         <td class="p-3" data-label="عنوان">

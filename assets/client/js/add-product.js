@@ -77,14 +77,17 @@ jQuery(document).ready(function ($) {
         $('#product_results').html(html);
     }
 
+
+
+    
   $(".mv_add_product_too").on("click", function (e) {
     e.preventDefault();
 
     // دریافت مقادیر data از دکمه
-    var productId = $(this).attr("product-id");
-    var userId = $(this).attr("user-id");
-    var ajaxUrl = $(this).attr("ajax-url");
-    var nonce = $(this).attr("wp-nonce");
+    let productId = $(this).attr("product-id");
+    let userId = $(this).attr("user-id");
+    let ajaxUrl = $(this).attr("ajax-url");
+    let nonce = $(this).attr("wp-nonce");
 
     // نمایش پاپ آپ و پس زمینه تیره
     $("#popup_overlay").show();
@@ -114,24 +117,24 @@ jQuery(document).ready(function ($) {
     e.preventDefault();
 
     // دریافت مقادیر data از دکمه سابمیت
-    var productId = $(this).data("product-id");
-    var userId = $(this).data("user-id");
-    var ajaxUrl = $(this).data("ajax-url");
-    var nonce = $(this).data("wp-nonce");
+    let productId = $(this).data("product-id");
+    let userId = $(this).data("user-id");
+    let ajaxUrl = $(this).data("ajax-url");
+    let nonce = $(this).data("wp-nonce");
 
     // دریافت مقادیر فیلدهای فرم
-    var regularPrice = $("#mv_regular_price").val();
-    var salePrice = $("#mv_sale_price").val();
-    var fromSaleDate = $("#mv_from_sale_date").val();
-    var toSaleDate = $("#mv_to_sale_date").val();
-    var stock = $("#mv_stock").val();
-    var minStock = $("#mv_min_stock").val();
-    var soldIndividually = $("#mv_sold_individually").val();
+    let regularPrice = $("#mv_regular_price").val();
+    let salePrice = $("#mv_sale_price").val();
+    let fromSaleDate = $("#mv_from_sale_date").val();
+    let toSaleDate = $("#mv_to_sale_date").val();
+    let stock = $("#mv_stock").val();
+    let minStock = $("#mv_min_stock").val();
+    let soldIndividually = $("#mv_sold_individually").val();
 
     // ارسال درخواست AJAX
     $.ajax({
       type: "POST",
-      url: ajaxUrl,
+      url: stm_wpcfto_ajaxurl,
       data: {
         action: "mv_add_product",
         nonce: nonce,
@@ -146,13 +149,13 @@ jQuery(document).ready(function ($) {
         sold_individually: soldIndividually,
       },
       success: function (response) {
-        var data = response.data;
+        let data = response.data;
         if (data.is_sent) {
           $("#popup_overlay").hide();
           $("#add_product_popup").hide();
           // دریافت مقادیر فیلدهای فرم
         } else {
-          var Message = data.message;
+          let Message = data.message;
           $(".alert-box").empty();
           $(".alert-box").slideDown(50);
           $(".alert-box").append('<p class="ErrorMessage">' + Message + "</p>");
@@ -163,84 +166,4 @@ jQuery(document).ready(function ($) {
       },
     });
   });
-});
-
-jQuery(document).ready(function ($) {
-  // تابع debounce برای کاهش تعداد بارهای اجرا
-  function debounce(func, wait) {
-    let timeout;
-    return function (...args) {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-  }
-
-  // تابع برای ارسال درخواست AJAX
-  function sendAjaxRequest() {
-    const category_id = $("#pro_list_cat").val();
-    const search_query = $("#pro_list_search_box").val();
-
-    $.ajax({
-      url: "http://localhost/persia-theme/wp-admin/admin-ajax.php", // URL برای ارسال درخواست AJAX، معمولاً 'admin-ajax.php' در وردپرس
-      type: "POST",
-      data: {
-        action: "search_products", // نام اکشن برای شناسایی در وردپرس
-        category_id: category_id,
-        search_query: search_query,
-        action_type: "list_products",
-      },
-      success: function (response) {
-        if (response.data.is_sent) {
-          var html = "";
-          response.data.products.forEach(function (product) {
-            html += `
-                  <tr class="even:bg-back/30 border-b last:border-b-0">
-                              <td class="p-3 text-center font-light" data-label="ردیف"><?= $counter++;?></td>
-                              <td class="p-3" data-label="عنوان">
-                                  <div class="flex-cb gap-4">
-                                      <img src="${product.thumbnail}" alt="" width="45" class="rounded-md">
-                                      <p>${product.title}</p>
-                                  </div>
-                              </td>
-                              <td class="p-3 text-center" data-label="دسته بندی">${product.terms}</td>
-                              <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25">${product.status}</span></td>
-                              <td class="p-3"><a href="?action=edit&seller=${product.seller_id}&product=${product.product_id}" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
-                          </tr>
-              `;
-          });
-          $("#product_box").html(html);
-        } else {
-          $("#product_box").html("<p>No products found.</p>");
-        }
-      },
-      error: function () {
-        $("#product_box").html("An error occurred.");
-      },
-    });
-  }
-  function displayProductslist(products) {
-    var html = "";
-    products.forEach(function (product) {
-      html += `
-            <tr class="even:bg-back/30 border-b last:border-b-0">
-                        <td class="p-3 text-center font-light" data-label="ردیف"><?= $counter++;?></td>
-                        <td class="p-3" data-label="عنوان">
-                            <div class="flex-cb gap-4">
-                                <img src="${product.thumbnail}" alt="" width="45" class="rounded-md">
-                                <p>${product.title}</p>
-                            </div>
-                        </td>
-                        <td class="p-3 text-center" data-label="دسته بندی">${product.terms}</td>
-                        <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25">${product.status}</span></td>
-                        <td class="p-3"><a href="?action=edit&seller=${product.seller_id}&product=${product.product_id}" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
-                    </tr>
-        `;
-    });
-    $("#product_box").html(html);
-  }
-  // راه‌اندازی رویداد تغییر در <select>
-  $("#pro_list_cat").on("change", debounce(sendAjaxRequest, 500));
-
-  // راه‌اندازی رویداد تایپ در <input>
-  $("#pro_list_search_box").on("input", debounce(sendAjaxRequest, 500));
 });
