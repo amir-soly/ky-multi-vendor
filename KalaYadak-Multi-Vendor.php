@@ -21,5 +21,8 @@ define('MV_DIR_URL', plugin_dir_url(__FILE__));
 include MV_DIR_PATH . '/includes/init.php';
 include MV_DIR_PATH . '/includes/client_scripts.php';
 include MV_DIR_PATH . '/includes/ajax.php';
+include MV_DIR_PATH . '/includes/role.php';
+include MV_DIR_PATH . '/includes/shortcode.php';
+
 
 ?>

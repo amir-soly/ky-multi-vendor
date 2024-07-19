@@ -34,4 +34,40 @@ function is_dashboard_seller_endpoint($endpoint) {
     global $wp_query;
     return isset($wp_query->query_vars[$endpoint]);
 }
+
+
+
+
+function is_product_on_sale($mv_id)
+{
+    global $wpdb;
+
+    // گرفتن اطلاعات محصول بر اساس mv_id
+    $prefix = $wpdb->prefix;
+    $result = $wpdb->get_row($wpdb->prepare(
+        "SELECT sale_price, from_sale_date, to_sale_date FROM {$prefix}kalayadak24_multivendor_products WHERE mv_id = %d",
+        $mv_id
+    ));
+
+    // بررسی اینکه آیا اطلاعات محصول دریافت شده است یا خیر
+    if ($result) {
+        $sale_price = $result->sale_price;
+        $from_sale_date = $result->from_sale_date;
+        $to_sale_date = $result->to_sale_date;
+
+        // بررسی اینکه آیا قیمت فروش ویژه ثبت شده است یا خیر
+        if ($sale_price > 0) {
+            // گرفتن تاریخ فعلی
+            $current_date = date('Y-m-d');
+
+            // بررسی اینکه آیا تاریخ فعلی در محدوده تاریخ‌های شروع و پایان فروش ویژه قرار دارد یا خیر
+            if (($from_sale_date <= $current_date) && ($to_sale_date >= $current_date)) {
+                return true; // محصول در فروش ویژه است
+            }
+        }
+    }
+
+    return false; // محصول در فروش ویژه نیست
+}
+
 ?>
