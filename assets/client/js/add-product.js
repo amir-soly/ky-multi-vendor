@@ -166,3 +166,30 @@ jQuery(document).ready(function ($) {
     });
   });
 });
+
+
+
+document.getElementById('get_orders_export').addEventListener('click', function() {
+    var sellerId = '114'; // شناسه فروشنده را به درستی مقداردهی کنید
+
+    var formData = new FormData();
+    formData.append('action', 'export_orders');
+    formData.append('seller_id', sellerId);
+
+    fetch('PATH_TO_YOUR_PHP_SCRIPT', { // مسیر به فایل PHP که در بالا کدش آورده شده
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'orders.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error => console.error('Error:', error));
+});

@@ -57,7 +57,7 @@ function mv_seller_list()
                         }
                         ?>
                     </div>
-                    <button type="button" data-product-id="<?php echo $product_id ?>" data-seller-id="<?php echo $seller_id; ?>" class="btn yellow add-to-cart-btn">
+                    <button type="button" data-mv-id="<?php echo $mv_id ?>" data-product-id="<?php echo $product_id; ?>" class="btn yellow add-to-cart-btn">
                         افزودن به سبد خرید
                     </button>
                 </div>
