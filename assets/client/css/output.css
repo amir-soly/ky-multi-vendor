@@ -610,6 +610,12 @@ button, input, optgroup, select, textarea{
   justify-content: space-between;
 }
 
+.flex-cc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ltr{
   direction: ltr;
 }
@@ -663,6 +669,10 @@ button, input, optgroup, select, textarea{
   z-index: 50;
 }
 
+.z-10 {
+  z-index: 10;
+}
+
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
@@ -673,9 +683,9 @@ button, input, optgroup, select, textarea{
   margin-bottom: 1.5rem;
 }
 
-.my-3 {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mb-2\.5 {
@@ -706,10 +716,6 @@ button, input, optgroup, select, textarea{
   margin-bottom: 2.25rem;
 }
 
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
 .mr-auto {
   margin-right: auto;
 }
@@ -737,6 +743,10 @@ button, input, optgroup, select, textarea{
 .h-fit {
   height: -moz-fit-content;
   height: fit-content;
+}
+
+.h-full {
+  height: 100%;
 }
 
 .w-1\/12 {
@@ -788,6 +798,16 @@ button, input, optgroup, select, textarea{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
@@ -828,6 +848,10 @@ button, input, optgroup, select, textarea{
   gap: 1.5rem;
 }
 
+.\!rounded-2\.5 {
+  border-radius: 20px !important;
+}
+
 .rounded-2\.5 {
   border-radius: 20px;
 }
@@ -842,10 +866,6 @@ button, input, optgroup, select, textarea{
 
 .rounded-md {
   border-radius: 0.375rem;
-}
-
-.\!rounded-2\.5 {
-  border-radius: 20px !important;
 }
 
 .border {
@@ -884,19 +904,19 @@ button, input, optgroup, select, textarea{
   border-color: rgb(217 217 217 / var(--tw-border-opacity));
 }
 
-.border-slate-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(148 163 184 / var(--tw-border-opacity));
-}
-
 .border-slate-300 {
   --tw-border-opacity: 1;
   border-color: rgb(203 213 225 / var(--tw-border-opacity));
 }
 
-.border-\[\#CCCCCC\] {
+.border-slate-400 {
   --tw-border-opacity: 1;
-  border-color: rgb(204 204 204 / var(--tw-border-opacity));
+  border-color: rgb(148 163 184 / var(--tw-border-opacity));
+}
+
+.\!bg-primary {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(253 167 1 / var(--tw-bg-opacity)) !important;
 }
 
 .bg-\[\#D5F7D9\] {
@@ -932,9 +952,8 @@ button, input, optgroup, select, textarea{
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.\!bg-primary {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(253 167 1 / var(--tw-bg-opacity)) !important;
+.bg-white\/50 {
+  background-color: rgb(255 255 255 / 0.5);
 }
 
 .p-2 {
@@ -949,6 +968,10 @@ button, input, optgroup, select, textarea{
   padding: 1.25rem;
 }
 
+.p-1 {
+  padding: 0.25rem;
+}
+
 .px-10 {
   padding-left: 2.5rem;
   padding-right: 2.5rem;
@@ -957,6 +980,11 @@ button, input, optgroup, select, textarea{
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.px-20 {
+  padding-left: 5rem;
+  padding-right: 5rem;
 }
 
 .px-3 {
@@ -992,16 +1020,6 @@ button, input, optgroup, select, textarea{
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-}
-
-.px-16 {
-  padding-left: 4rem;
-  padding-right: 4rem;
-}
-
-.px-20 {
-  padding-left: 5rem;
-  padding-right: 5rem;
 }
 
 .\!pr-16 {
@@ -1064,6 +1082,11 @@ button, input, optgroup, select, textarea{
   font-weight: 300;
 }
 
+.\!text-secondary {
+  --tw-text-opacity: 1 !important;
+  color: rgb(37 46 73 / var(--tw-text-opacity)) !important;
+}
+
 .text-green-700 {
   --tw-text-opacity: 1;
   color: rgb(21 128 61 / var(--tw-text-opacity));
@@ -1089,13 +1112,17 @@ button, input, optgroup, select, textarea{
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.\!text-secondary {
-  --tw-text-opacity: 1 !important;
-  color: rgb(37 46 73 / var(--tw-text-opacity)) !important;
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .opacity-0 {
   opacity: 0;
+}
+
+.opacity-40 {
+  opacity: 0.4;
 }
 
 .shadow-xl {
@@ -1113,10 +1140,6 @@ button, input, optgroup, select, textarea{
 .transition-all {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
-
-.duration-300 {
   transition-duration: 300ms;
 }
 
