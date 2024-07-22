@@ -10,6 +10,10 @@ jQuery(document).ready(function ($) {
             return;
         }
 
+        let originalText = $('#mv_search_submit').text();
+        $('#mv_search_submit').html('<svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg>');
+
+
         // perform AJAX request
         $.ajax({
             url: stm_wpcfto_ajaxurl,
@@ -23,6 +27,7 @@ jQuery(document).ready(function ($) {
                 $('#product_results_container').show();
                 $('#results_count').html(`${response.data.products.length} مورد`);
 
+                $('#mv_search_submit').html(originalText);
                 if (response.success) {
                     displayProducts(response.data.products);
                 } else {
@@ -31,6 +36,7 @@ jQuery(document).ready(function ($) {
             },
             error: function (xhr, status, error) {
                 $('#product_results_container').show();
+                $('#mv_search_submit').html(originalText);
 
                 $('#product_results').html('<p class="text-center text-xl">مشکلی پیش آمده دوباره امتحان کنید.</p>');
             },
@@ -169,27 +175,27 @@ jQuery(document).ready(function ($) {
 
 
 
-document.getElementById('get_orders_export').addEventListener('click', function() {
-    var sellerId = '114'; // شناسه فروشنده را به درستی مقداردهی کنید
+// document.getElementById('get_orders_export').addEventListener('click', function() {
+//     var sellerId = '114'; // شناسه فروشنده را به درستی مقداردهی کنید
 
-    var formData = new FormData();
-    formData.append('action', 'export_orders');
-    formData.append('seller_id', sellerId);
+//     var formData = new FormData();
+//     formData.append('action', 'export_orders');
+//     formData.append('seller_id', sellerId);
 
-    fetch('PATH_TO_YOUR_PHP_SCRIPT', { // مسیر به فایل PHP که در بالا کدش آورده شده
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        var url = window.URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'orders.xlsx';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(error => console.error('Error:', error));
-});
+//     fetch('PATH_TO_YOUR_PHP_SCRIPT', { // مسیر به فایل PHP که در بالا کدش آورده شده
+//         method: 'POST',
+//         body: formData
+//     })
+//     .then(response => response.blob())
+//     .then(blob => {
+//         var url = window.URL.createObjectURL(blob);
+//         var a = document.createElement('a');
+//         a.style.display = 'none';
+//         a.href = url;
+//         a.download = 'orders.xlsx';
+//         document.body.appendChild(a);
+//         a.click();
+//         window.URL.revokeObjectURL(url);
+//     })
+//     .catch(error => console.error('Error:', error));
+// });
