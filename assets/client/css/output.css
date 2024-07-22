@@ -610,8 +610,31 @@ button, input, optgroup, select, textarea{
   justify-content: space-between;
 }
 
+.flex-cc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ltr{
+  direction: ltr;
+}
+
+.fixed-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  --tw-translate-x: -50%;
+  --tw-translate-y: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .appearance-select {
   background-position: left .5rem center;
+}
+
+.invisible {
+  visibility: hidden;
 }
 
 .fixed {
@@ -626,12 +649,28 @@ button, input, optgroup, select, textarea{
   position: relative;
 }
 
+.inset-0 {
+  inset: 0px;
+}
+
 .right-3 {
   right: 0.75rem;
 }
 
 .top-1\/2 {
   top: 50%;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.z-10 {
+  z-index: 10;
 }
 
 .my-5 {
@@ -642,6 +681,15 @@ button, input, optgroup, select, textarea{
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mb-2\.5 {
+  margin-bottom: 0.625rem;
 }
 
 .mb-3 {
@@ -668,6 +716,10 @@ button, input, optgroup, select, textarea{
   margin-bottom: 2.25rem;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
 .block {
   display: block;
 }
@@ -691,6 +743,10 @@ button, input, optgroup, select, textarea{
 .h-fit {
   height: -moz-fit-content;
   height: fit-content;
+}
+
+.h-full {
+  height: 100%;
 }
 
 .w-1\/12 {
@@ -721,6 +777,10 @@ button, input, optgroup, select, textarea{
   width: 100%;
 }
 
+.max-w-md {
+  max-width: 28rem;
+}
+
 .table-fixed {
   table-layout: fixed;
 }
@@ -738,8 +798,22 @@ button, input, optgroup, select, textarea{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .flex-wrap {
@@ -772,6 +846,14 @@ button, input, optgroup, select, textarea{
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.\!rounded-2\.5 {
+  border-radius: 20px !important;
+}
+
+.rounded-2\.5 {
+  border-radius: 20px;
 }
 
 .rounded-3xl {
@@ -822,9 +904,19 @@ button, input, optgroup, select, textarea{
   border-color: rgb(217 217 217 / var(--tw-border-opacity));
 }
 
+.border-slate-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(203 213 225 / var(--tw-border-opacity));
+}
+
 .border-slate-400 {
   --tw-border-opacity: 1;
   border-color: rgb(148 163 184 / var(--tw-border-opacity));
+}
+
+.\!bg-primary {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(253 167 1 / var(--tw-bg-opacity)) !important;
 }
 
 .bg-\[\#D5F7D9\] {
@@ -851,9 +943,17 @@ button, input, optgroup, select, textarea{
   background-color: rgb(37 46 73 / var(--tw-bg-opacity));
 }
 
+.bg-slate-900\/75 {
+  background-color: rgb(15 23 42 / 0.75);
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-white\/50 {
+  background-color: rgb(255 255 255 / 0.5);
 }
 
 .p-2 {
@@ -868,6 +968,10 @@ button, input, optgroup, select, textarea{
   padding: 1.25rem;
 }
 
+.p-1 {
+  padding: 0.25rem;
+}
+
 .px-10 {
   padding-left: 2.5rem;
   padding-right: 2.5rem;
@@ -876,6 +980,11 @@ button, input, optgroup, select, textarea{
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.px-20 {
+  padding-left: 5rem;
+  padding-right: 5rem;
 }
 
 .px-3 {
@@ -888,6 +997,11 @@ button, input, optgroup, select, textarea{
   padding-right: 1.5rem;
 }
 
+.px-7 {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
+
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -898,8 +1012,22 @@ button, input, optgroup, select, textarea{
   padding-bottom: 0.625rem;
 }
 
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
 .\!pr-16 {
   padding-right: 4rem !important;
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem;
 }
 
 .pb-6 {
@@ -932,6 +1060,11 @@ button, input, optgroup, select, textarea{
   line-height: 1.25rem;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -939,11 +1072,6 @@ button, input, optgroup, select, textarea{
 
 .text-xxs {
   font-size: 10px;
-}
-
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
 }
 
 .font-bold {
@@ -954,9 +1082,19 @@ button, input, optgroup, select, textarea{
   font-weight: 300;
 }
 
+.\!text-secondary {
+  --tw-text-opacity: 1 !important;
+  color: rgb(37 46 73 / var(--tw-text-opacity)) !important;
+}
+
 .text-green-700 {
   --tw-text-opacity: 1;
   color: rgb(21 128 61 / var(--tw-text-opacity));
+}
+
+.text-lite-text {
+  --tw-text-opacity: 1;
+  color: rgb(179 179 179 / var(--tw-text-opacity));
 }
 
 .text-paragraph {
@@ -972,6 +1110,31 @@ button, input, optgroup, select, textarea{
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-40 {
+  opacity: 0.4;
+}
+
+.shadow-xl {
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.backdrop-blur-sm {
+  --tw-backdrop-blur: blur(4px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
 
 .transition-all {
@@ -1010,6 +1173,10 @@ button, input, optgroup, select, textarea{
 @media not all and (min-width: 1024px) {
   .max-lg\:hidden {
     display: none;
+  }
+
+  .max-lg\:p-2 {
+    padding: 0.5rem;
   }
 }
 
