@@ -13,6 +13,7 @@ jQuery(document).ready(function ($) {
         const category_id = $('#pro_list_cat').val();
         const search_query = $('#pro_list_search_box').val();
   
+        $('#loader').removeClass('opacity-0 invisible');
         $.ajax({
             url: stm_wpcfto_ajaxurl,
             type: 'POST',
@@ -23,6 +24,8 @@ jQuery(document).ready(function ($) {
                 action_type: 'list_products',
             },
             success: function (response) {
+                $('#loader').addClass('opacity-0 invisible');
+
                 if (response.success) {
                     displayProductslist(response.data.products);
                 } else {
@@ -30,7 +33,9 @@ jQuery(document).ready(function ($) {
                 }
             },
             error: function () {
-                $('#products_list').html('<tr><td colspan="5" class="text-center text-xl" p-3>مشکلی پیش آمده دوباره امتحان کنید.</td></tr>');
+                $('#loader').addClass('opacity-0 invisible');
+
+                $('#products_list').html('<tr><td colspan="5" class="text-center text-xl p-3">مشکلی پیش آمده دوباره امتحان کنید.</td></tr>');
             },
         });
     }

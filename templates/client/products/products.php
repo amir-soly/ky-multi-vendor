@@ -115,59 +115,64 @@ $product_categories = get_terms(array(
                 </tr>
             </tbody>
         </table> -->
-        <table class="border-collapse table-fixed w-full" id="products_table">
-            <thead class="max-lg:hidden">
-                <tr>
-                    <th class="w-1/12 border-b p-3 border-slate-400 text-center">ردیف</th>
-                    <th class="w-5/12 border-b p-3 border-slate-400 text-center">عنوان</th>
-                    <th class="w-2/12 border-b p-3 border-slate-400 text-center">دسته بندی</th>
-                    <th class="w-2/12 border-b p-3 border-slate-400 text-center">وضعیت</th>
-                    <th class="w-2/12 border-b p-3 border-slate-400"></th>
-                </tr>
-            </thead>
-            <tbody id="products_list">
-                <?php
-                $counter = 1;
-                foreach ($result as $row) {
-                    $product_id = $row->product_id;
-                    $status='';
-                    switch ($row->status) {
-                        case 'pending':
-                            $status = 'در انتظار تایید' ;
-                            break;
-                        case 'published':
-                            $status = 'تایید شده' ;
-                            break;
-                        case 'rejected':
-                            $status = 'رد شده' ;
-                            break;
-                    }
-
-                    $url = add_query_arg(
-                        array(
-                            'action' => 'edit',
-                            'seller' => $row->seller_id,
-                            'product' => $row->product_id,
-                        ),
-                        home_url('dashboard-seller/add-product')
-                    );
-                    
-                    ?>
-                    <tr class="even:bg-back/30 border-b last:border-b-0">
-                        <td class="p-3 text-center font-light" data-label="ردیف"><?= $counter++;?></td>
-                        <td class="p-3" data-label="عنوان">
-                            <div class="flex-cb gap-4">
-                                <img src="<?= get_the_post_thumbnail_url($product_id, 'thumbnail'); ?>" alt="" width="45" class="rounded-md">
-                                <p><?= get_the_title($product_id) ?></p>
-                            </div>
-                        </td>
-                        <td class="p-3 text-center" data-label="دسته بندی"><?= wc_get_product_category_list($product_id);?>
-                        </td>
-                        <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25"><?= $status ?></span></td>
-                        <td class="p-3"><a href="<?= $url?>" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
+        <div class="relative">
+            <table class="border-collapse table-fixed w-full" id="products_table">
+                <thead class="max-lg:hidden">
+                    <tr>
+                        <th class="w-1/12 border-b p-3 border-slate-400 text-center">ردیف</th>
+                        <th class="w-5/12 border-b p-3 border-slate-400 text-center">عنوان</th>
+                        <th class="w-2/12 border-b p-3 border-slate-400 text-center">دسته بندی</th>
+                        <th class="w-2/12 border-b p-3 border-slate-400 text-center">وضعیت</th>
+                        <th class="w-2/12 border-b p-3 border-slate-400"></th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="products_list">
+                    <?php
+                    $counter = 1;
+                    foreach ($result as $row) {
+                        $product_id = $row->product_id;
+                        $status='';
+                        switch ($row->status) {
+                            case 'pending':
+                                $status = 'در انتظار تایید' ;
+                                break;
+                            case 'published':
+                                $status = 'تایید شده' ;
+                                break;
+                            case 'rejected':
+                                $status = 'رد شده' ;
+                                break;
+                        }
+    
+                        $url = add_query_arg(
+                            array(
+                                'action' => 'edit',
+                                'seller' => $row->seller_id,
+                                'product' => $row->product_id,
+                            ),
+                            home_url('dashboard-seller/add-product')
+                        );
+                        
+                        ?>
+                        <tr class="even:bg-back/30 border-b last:border-b-0">
+                            <td class="p-3 text-center font-light" data-label="ردیف"><?= $counter++;?></td>
+                            <td class="p-3" data-label="عنوان">
+                                <div class="flex-cb gap-4">
+                                    <img src="<?= get_the_post_thumbnail_url($product_id, 'thumbnail'); ?>" alt="" width="45" class="rounded-md">
+                                    <p><?= get_the_title($product_id) ?></p>
+                                </div>
+                            </td>
+                            <td class="p-3 text-center" data-label="دسته بندی"><?= wc_get_product_category_list($product_id);?>
+                            </td>
+                            <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25"><?= $status ?></span></td>
+                            <td class="p-3"><a href="<?= $url?>" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <div id="loader" class="transition-all absolute inset-0 w-full h-full backdrop-blur-sm flex-cc z-10 text-black opacity-0 invisible">
+                <span><svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg></span>
+            </div>
+        </div>
     </div>
 </div>
