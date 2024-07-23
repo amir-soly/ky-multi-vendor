@@ -31,6 +31,8 @@ $profile_image = 0;
                             include MV_DIR_PATH . '/templates/client/orders.php';
                         } elseif(is_dashboard_seller_endpoint('store-information')) {
                             include MV_DIR_PATH . '/templates/client/profile/store-info.php';
+                        } elseif(is_dashboard_seller_endpoint('seller-information')) {
+                            include MV_DIR_PATH . '/templates/client/profile/seller-info.php';
                         }
                     ?>
                 </div>
