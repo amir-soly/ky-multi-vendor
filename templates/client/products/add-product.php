@@ -18,7 +18,6 @@ defined('ABSPATH') || exit;
             <button name="mv_search_submit" id="mv_search_submit" class="bg-secondary text-white rounded-full py-2.5 w-1/4">جستجو</button>
         </form>
     </div>
-
     <div id="product_results_container" class="hidden">
         <div class="flex-cb">
             <h3 class="text-secondary font-bold text-base">نتایج جستجو</h3>
@@ -31,106 +30,98 @@ defined('ABSPATH') || exit;
         <div id="product_results"></div>
     </div>
 </div>
-<style>
-
-    /* پس زمینه تیره برای پاپ آپ */
-    #popup_overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 999;
-    }
-
-    /* باکس پاپ آپ */
-    #add_product_popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 400px;
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        z-index: 1000;
-    }
-
-    /* استایل فیلدها */
-    .row {
-        margin-bottom: 15px;
-    }
-
-    .row label {
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .row input, .row select {
-        width: calc(100% - 20px);
-        padding: 8px 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    /* دکمه سابمیت */
-    #mv_submit_product {
-        display: inline-block;
-        padding: 10px 20px;
-        background: #0073aa;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    #mv_submit_product:hover {
-        background: #005a87;
-    }
-</style>
-
-<div id="popup_overlay"></div>
-
-<div id="add_product_popup" style="display: none;">
-    <div class="row">
-        <label for="mv_regular_price">قیمت محصول</label>
-        <input type="number" name="mv_regular_price" id="mv_regular_price">
+<div>
+    <div id="modal-product-info" class="transition-all z-50 fixed-center fixed w-full h-fit max-w-3xl max-lg:p-2 opacity-0 invisible">
+        <div class="bg-white rounded-2.5 shadow-xl px-9 py-6 relative">
+            <div class="flex-cb pb-3 border-b border-slate-300 mb-5">
+                <p class="text-secondary font-bold">همین کالا را می فروشید؟</p>
+                <button class="close-modal-product-info"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none"><path d="M17 1L1 21" stroke="#606060"/><path d="M1.5 1L17.5 21" stroke="#606060"/></svg></button>
+            </div>
+            <div>
+                <p class="text-black mb-6">اگر مشخصات این کالا با کالای شما منطبق است می توانید این کالا را بفروشید.</p>
+                <div class="flex items-center gap-4">
+                    <img src="" alt="" width="80">
+                    <div>
+                        <table class="text-xxs table-fixed">
+                            <tr>
+                                <td class="font-bold px-2 py-1">عنوان کالا</td>
+                                <td class="px-2 py-1">صافی گیربکس هیوندای توسان (ix35) کد اتاق LM جنیون پارت 2014 تا 2015 فیس لیفت</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold px-2 py-1">کد کالا (DKP)</td>
+                                <td class="px-2 py-1"></td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold px-2 py-1">قیمت مرجع</td>
+                                <td class="px-2 py-1">600,000</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold px-2 py-1">کمیسیون</td>
+                                <td class="px-2 py-1">%۹</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold px-2 py-1">برند</td>
+                                <td class="px-2 py-1">متفرقه</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-slate-300 my-3">
+            <div class="flex items-center justify-end gap-2.5">
+                <button class="close-modal-product-info !bg-lite-gray !text-secondary block rounded-full py-2.5 px-10 font-bold">بازگشت</button>
+                <button class="!bg-primary !text-secondary block rounded-full py-2.5 px-4 font-bold">فروش همین کالا</button>
+            </div>
+        </div>
     </div>
-    <div class="row">
-        <label for="mv_sale_price">قیمت فروش ویژه محصول</label>
-        <input type="number" name="mv_sale_price" id="mv_sale_price">
+    <div id="modal-add-product" class="transition-all z-50 fixed-center fixed w-full h-fit max-w-3xl max-lg:p-2 opacity-0 invisible">
+        <div class="bg-white rounded-2.5 shadow-xl px-9 py-6 relative">
+            <div class="flex-cb pb-3 border-b border-slate-300 mb-5">
+                <p class="text-secondary font-bold">ثبت اطلاعات محصول</p>
+                <button id="close-modal-add-product">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none">
+                        <path d="M17 1L1 21" stroke="#606060"/>
+                        <path d="M1.5 1L17.5 21" stroke="#606060"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="add_product_form">
+                <div class="grid grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label for="mv_regular_price" class="text-secondary text-xs mb-2.5 block">قیمت محصول</label>
+                        <input type="text" name="mv_regular_price" id="mv_regular_price" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                    </div>
+                    <div>
+                        <div class="flex-cb text-xs mb-2.5">
+                            <label for="mv_sale_price" class="text-secondary">قیمت فروش ویژه محصول</label>
+                            <button type="button" id="toggle-sale-schedule" class="text-blue-600 underline">زمان بندی فروش</button>
+                        </div>
+                        <input type="text" name="mv_sale_price" id="mv_sale_price" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                    </div>
+                    <div class="sale-date-fields hidden">
+                        <label for="mv_from_sale_date" class="text-secondary text-xs mb-2.5 block">تاریخ شروع فروش ویژه</label>
+                        <input type="text" name="mv_from_sale_date" id="mv_from_sale_date" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                    </div>
+                    <div class="sale-date-fields hidden">
+                        <label for="mv_to_sale_date" class="text-secondary text-xs mb-2.5 block">تاریخ پایان فروش ویژه</label>
+                        <input type="text" name="mv_to_sale_date" id="mv_to_sale_date" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                    </div>
+                    <div>
+                        <label for="mv_stock" class="text-secondary text-xs mb-2.5 block">موجودی محصول</label>
+                        <input type="text" name="mv_stock" id="mv_stock" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                    </div>
+                    <div>
+                        <label for="mv_min_stock" class="text-secondary text-xs mb-2.5 block">حداقل موجودی محصول</label>
+                        <input type="text" name="mv_min_stock" id="mv_min_stock" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                    </div>
+                    <div class="col-span-full flex-cc gap-2">
+                        <label for="mv_sold_individually" class="text-secondary text-xs">تک فروشی محصول</label>
+                        <input type="checkbox" name="mv_sold_individually" id="mv_sold_individually" value="yes">
+                    </div>
+                </div>
+                <button type="submit" class="!bg-primary !text-secondary block rounded-full py-3 font-bold w-full">ثبت محصول</button>
+            </form>
+        </div>
     </div>
-    <div class="row">
-        <label for="mv_from_sale_date">تاریخ شروع فروش ویژه</label>
-        <input type="date" name="mv_from_sale_date" id="mv_from_sale_date">
-    </div>
-    <div class="row">
-        <label for="mv_to_sale_date">تاریخ پایان فروش ویژه</label>
-        <input type="date" name="mv_to_sale_date" id="mv_to_sale_date">
-    </div>
-    <div class="row">
-        <label for="mv_stock">موجودی محصول</label>
-        <input type="number" name="mv_stock" id="mv_stock">
-    </div>
-    <div class="row">
-        <label for="mv_min_stock">حداقل موجودی محصول</label>
-        <input type="number" name="mv_min_stock" id="mv_min_stock">
-    </div>
-    <div class="row">
-        <label for="mv_sold_individually">تک فروشی محصول</label>
-        <select name="mv_sold_individually" id="mv_sold_individually">
-            <option value="yes">بله</option>
-            <option value="no">خیر</option>
-        </select>
-    </div>
-    <div class="row">
-        <input type="submit" value="ثبت محصول" id="mv_submit_product">
-    </div>
-    <div class="row">
-        <p class="alert-box"></p>
-    </div>
+    <div id="overlay-modal-product" class="transition-all fixed inset-0 z-40 backdrop-blur-sm bg-slate-900/75 opacity-0 invisible"></div>
 </div>

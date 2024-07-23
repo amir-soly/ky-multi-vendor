@@ -84,93 +84,93 @@ jQuery(document).ready(function ($) {
     }
 
 
+    // add product
+    $(document).on("click", ".mv_add_product_too", function (e) {
+        e.preventDefault();
 
+        let productId = $(this).attr("product-id");
+        let userId = $(this).attr("user-id");
+        let ajaxUrl = $(this).attr("ajax-url");
+        let nonce = $(this).attr("wp-nonce");
 
-  $(document).on("click", ".mv_add_product_too", function (e) {
-    e.preventDefault();
-
-    // دریافت مقادیر data از دکمه
-    let productId = $(this).attr("product-id");
-    let userId = $(this).attr("user-id");
-    let ajaxUrl = $(this).attr("ajax-url");
-    let nonce = $(this).attr("wp-nonce");
-
-    // نمایش پاپ آپ و پس زمینه تیره
-    $("#popup_overlay").show();
-    $("#add_product_popup").show();
-
-    // انتقال داده‌ها به دکمه سابمیت داخل پاپ آپ
-    $("#mv_submit_product").data("product-id", productId);
-    $("#mv_submit_product").data("user-id", userId);
-    $("#mv_submit_product").data("ajax-url", ajaxUrl);
-    $("#mv_submit_product").data("wp-nonce", nonce);
-  });
-
-  // مخفی کردن پاپ آپ با کلیک روی پس زمینه تیره
-  $("#popup_overlay").on("click", function () {
-    $("#popup_overlay").hide();
-    $("#add_product_popup").hide();
-    regularPrice = $("#mv_regular_price").val(" ");
-    salePrice = $("#mv_sale_price").val(" ");
-    fromSaleDate = $("#mv_from_sale_date").val(" ");
-    toSaleDate = $("#mv_to_sale_date").val(" ");
-    stock = $("#mv_stock").val(" ");
-    minStock = $("#mv_min_stock").val(" ");
-    soldIndividually = $("#mv_sold_individually").val(" ");
-  });
-
-  $("#mv_submit_product").on("click", function (e) {
-    e.preventDefault();
-
-    // دریافت مقادیر data از دکمه سابمیت
-    let productId = $(this).data("product-id");
-    let userId = $(this).data("user-id");
-    let nonce = $(this).data("wp-nonce");
-
-    // دریافت مقادیر فیلدهای فرم
-    let regularPrice = $("#mv_regular_price").val();
-    let salePrice = $("#mv_sale_price").val();
-    let fromSaleDate = $("#mv_from_sale_date").val();
-    let toSaleDate = $("#mv_to_sale_date").val();
-    let stock = $("#mv_stock").val();
-    let minStock = $("#mv_min_stock").val();
-    let soldIndividually = $("#mv_sold_individually").val();
-
-    // ارسال درخواست AJAX
-    $.ajax({
-      type: "POST",
-      url: stm_wpcfto_ajaxurl,
-      data: {
-        action: "mv_add_product",
-        nonce: nonce,
-        product_id: productId,
-        user_id: userId,
-        regular_price: regularPrice,
-        sale_price: salePrice,
-        from_sale_date: fromSaleDate,
-        to_sale_date: toSaleDate,
-        stock: stock,
-        min_stock: minStock,
-        sold_individually: soldIndividually,
-      },
-      success: function (response) {
-        let data = response.data;
-        if (data.is_sent) {
-          $("#popup_overlay").hide();
-          $("#add_product_popup").hide();
-          // دریافت مقادیر فیلدهای فرم
-        } else {
-          let Message = data.message;
-          $(".alert-box").empty();
-          $(".alert-box").slideDown(50);
-          $(".alert-box").append('<p class="ErrorMessage">' + Message + "</p>");
-        }
-      },
-      error: function (response) {
-        console.log("Error:", response);
-      },
+        $("#mv_submit_product").data("product-id", productId);
+        $("#mv_submit_product").data("user-id", userId);
+        $("#mv_submit_product").data("ajax-url", ajaxUrl);
+        $("#mv_submit_product").data("wp-nonce", nonce);
     });
-  });
+
+    $("#close-modal-add-product").on("click", function () {
+
+    });
+
+    // show and hide sales date fields
+    $("#toggle-sale-schedule").on("click", function () {
+        $(".sale-date-fields").toggleClass("hidden");
+        let isHidden = $(".sale-date-fields").hasClass("hidden");
+        $(this).text(isHidden ? "زمان بندی فروش" : "لغو زمان بندی");
+    });
+
+    // send AJAX request
+    $("#add_product_form").on("click", function (e) {
+        e.preventDefault();
+
+        let productId = $(this).data("product-id");
+        let userId = $(this).data("user-id");
+        let nonce = $(this).data("wp-nonce");
+
+        let regularPrice = $("#mv_regular_price").val();
+        let salePrice = $("#mv_sale_price").val();
+        let fromSaleDate = $("#mv_from_sale_date").val();
+        let toSaleDate = $("#mv_to_sale_date").val();
+        let stock = $("#mv_stock").val();
+        let minStock = $("#mv_min_stock").val();
+        let soldIndividually = $("#mv_sold_individually").is(":checked") ? "yes" : "no";
+
+        $.ajax({
+            type: "POST",
+            url: stm_wpcfto_ajaxurl,
+            data: {
+                action: "mv_add_product",
+                nonce: nonce,
+                product_id: productId,
+                user_id: userId,
+                regular_price: regularPrice,
+                sale_price: salePrice,
+                from_sale_date: fromSaleDate,
+                to_sale_date: toSaleDate,
+                stock: stock,
+                min_stock: minStock,
+                sold_individually: soldIndividually,
+            },
+            success: function (response) {
+                let data = response.data;
+                if (data.is_sent) {
+                    $("#popup_overlay").hide();
+                    $("#add_product_popup").hide();
+                    clearForm();
+                } else {
+                    let message = data.message;
+                    $(".alert-box").empty().slideDown(50).append('<p class="ErrorMessage">' + message + "</p>");
+                }
+            },
+            error: function (response) {
+                console.log("Error:", response);
+            },
+        });
+    });
+
+    // clear the form
+    function clearForm() {
+        $("#mv_regular_price").val("");
+        $("#mv_sale_price").val("");
+        $("#mv_from_sale_date").val("");
+        $("#mv_to_sale_date").val("");
+        $("#mv_stock").val("");
+        $("#mv_min_stock").val("");
+        $("#mv_sold_individually").prop("checked", false);
+        $("#sale-date-fields").addClass("hidden");
+        $("#toggle-sale-schedule").text("زمان بندی فروش");
+    }
 });
 
 
