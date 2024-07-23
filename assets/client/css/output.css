@@ -661,6 +661,10 @@ button, input, optgroup, select, textarea{
   top: 50%;
 }
 
+.z-10 {
+  z-index: 10;
+}
+
 .z-40 {
   z-index: 40;
 }
@@ -669,8 +673,9 @@ button, input, optgroup, select, textarea{
   z-index: 50;
 }
 
-.z-10 {
-  z-index: 10;
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .my-5 {
@@ -681,11 +686,6 @@ button, input, optgroup, select, textarea{
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .mb-2\.5 {
@@ -952,8 +952,8 @@ button, input, optgroup, select, textarea{
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-white\/50 {
-  background-color: rgb(255 255 255 / 0.5);
+.p-1 {
+  padding: 0.25rem;
 }
 
 .p-2 {
@@ -966,10 +966,6 @@ button, input, optgroup, select, textarea{
 
 .p-5 {
   padding: 1.25rem;
-}
-
-.p-1 {
-  padding: 0.25rem;
 }
 
 .px-10 {
@@ -995,11 +991,6 @@ button, input, optgroup, select, textarea{
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-}
-
-.px-7 {
-  padding-left: 1.75rem;
-  padding-right: 1.75rem;
 }
 
 .py-2 {
@@ -1087,6 +1078,11 @@ button, input, optgroup, select, textarea{
   color: rgb(37 46 73 / var(--tw-text-opacity)) !important;
 }
 
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
 .text-green-700 {
   --tw-text-opacity: 1;
   color: rgb(21 128 61 / var(--tw-text-opacity));
@@ -1112,17 +1108,8 @@ button, input, optgroup, select, textarea{
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
-}
-
 .opacity-0 {
   opacity: 0;
-}
-
-.opacity-40 {
-  opacity: 0.4;
 }
 
 .shadow-xl {
