@@ -165,7 +165,7 @@ $product_categories = get_terms(array(
                             <td class="p-3 text-center" data-label="دسته بندی"><?= wc_get_product_category_list($product_id);?>
                             </td>
                             <td class="p-3 text-center" data-label="وضعيت"><span class="w-full block rounded-full py-2 text-center text-green-700 bg-green-700/25"><?= $status ?></span></td>
-                            <td class="p-3"><a href="<?= $url?>" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
+                            <td class="p-3"><a href="<?= get_permalink($product_id); ?>" class="bg-secondary w-full block rounded-full text-center text-white py-2">ویرایش</a></td>
                         </tr>
                     <?php } ?>
                 </tbody>

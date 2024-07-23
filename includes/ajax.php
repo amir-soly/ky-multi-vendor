@@ -147,7 +147,8 @@ add_action('wp_ajax_nopriv_mv_add_product', 'mv_add_product');
 
 
 
-
+add_action('wp_ajax_search_products', 'handle_search_products');
+add_action('wp_ajax_nopriv_search_products', 'handle_search_products');
 function handle_search_products() {
     global $wpdb;
 
@@ -246,5 +247,53 @@ function handle_search_products() {
 
     wp_die(); // end AJAX execution
 }
-add_action('wp_ajax_search_products', 'handle_search_products');
-add_action('wp_ajax_nopriv_search_products', 'handle_search_products');
+
+add_action('wp_ajax_submit_store_status', 'handle_submit_store_status');
+add_action('wp_ajax_nopriv_submit_store_status', 'handle_submit_store_status');
+
+function handle_submit_store_status() {
+
+    parse_str($_POST['form_data'], $form_data);
+
+    $seller_id = isset($form_data['seller_id']) ? intval($form_data['seller_id']) : 0;
+    $store_data = isset($form_data['store_data']) ? sanitize_text_field($form_data['store_data']) : '';
+    $meta_field = isset($form_data['meta_field']) ? sanitize_text_field($form_data['meta_field']) : '';
+    $user = get_userdata($seller_id);
+    if (!$user && !in_array('mv_seller', $user->roles)) {
+        wp_send_json_error(array(
+            'message' => 'User does not exist or is not seller',
+        ));
+    }
+
+
+    $data_check = mv_seller_store_info_meta($seller_id, $store_data, $meta_field);
+    if($data_check){
+        wp_send_json_success(array(
+            'message' => 'store mv_store_data added successfully',
+        ));
+    }else{
+        wp_send_json_error(array(
+            'message' => 'there is an error while adding',
+        ));
+    }
+    
+
+    wp_die();
+}
+
+add_action('wp_ajax_mv_get_template_part', 'mv_get_template_part');
+add_action('wp_ajax_nopriv_mv_get_template_part', 'mv_get_template_part');
+function mv_get_template_part() {
+    $template = sanitize_text_field($_POST['template']);
+
+    ob_start();
+    mv_template_part($template);
+    $html = ob_get_clean();
+
+    echo $html;
+    wp_die();
+}
+
+function mv_template_part( $template ) {
+    require MV_DIR_PATH . '/templates/' . $template . '.php';
+}
