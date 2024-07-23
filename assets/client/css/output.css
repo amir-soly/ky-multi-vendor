@@ -673,6 +673,7 @@ button, input, optgroup, select, textarea{
   z-index: 50;
 }
 
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -777,6 +778,10 @@ button, input, optgroup, select, textarea{
   width: 100%;
 }
 
+.max-w-3xl {
+  max-width: 48rem;
+}
+
 .max-w-md {
   max-width: 28rem;
 }
@@ -832,6 +837,10 @@ button, input, optgroup, select, textarea{
   align-items: stretch;
 }
 
+.justify-end {
+  justify-content: flex-end;
+}
+
 .gap-16 {
   gap: 4rem;
 }
@@ -846,6 +855,19 @@ button, input, optgroup, select, textarea{
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.gap-2\.5 {
+  gap: 0.625rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-x-2\.5 {
+  -moz-column-gap: 0.625rem;
+       column-gap: 0.625rem;
 }
 
 .\!rounded-2\.5 {
@@ -1013,6 +1035,26 @@ button, input, optgroup, select, textarea{
   padding-bottom: 1.5rem;
 }
 
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.px-9 {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
+
 .\!pr-16 {
   padding-right: 4rem !important;
 }
@@ -1106,10 +1148,6 @@ button, input, optgroup, select, textarea{
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.opacity-0 {
-  opacity: 0;
 }
 
 .shadow-xl {
