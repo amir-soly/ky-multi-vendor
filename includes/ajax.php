@@ -5,9 +5,9 @@ function check_product_existence($product_id, $user_id)
 {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'kalayadak24_multivendor_products';
+    $table_name = $wpdb->prefix . 'mv_seller_products_list
+    ';
 
-    // Query to check if the product for this user already exists
     $query = $wpdb->prepare(
         "SELECT COUNT(*) FROM $table_name WHERE product_id = %d AND seller_id = %d",
         $product_id,
@@ -27,7 +27,8 @@ function insert_product_data_into_table($product_id, $seller_id, $regular_price,
 {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'kalayadak24_multivendor_products';
+    $table_name = $wpdb->prefix . 'mv_seller_products_list
+    ';
 
     $data = array(
         'product_id' => $product_id,
@@ -188,7 +189,8 @@ function handle_search_products() {
             $mainIDs = wp_list_pluck($search_results, 'ID');
             $seller_id = get_current_user_id();
             $result = $wpdb->get_results($wpdb->prepare(
-                "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
+                "SELECT product_id FROM {$wpdb->prefix}mv_seller_products_list
+                 WHERE seller_id = %d",
                 $seller_id
             ));
 
@@ -219,7 +221,8 @@ function handle_search_products() {
         if ($search_results) {
             $seller_id = get_current_user_id();
             $result = $wpdb->get_results($wpdb->prepare(
-                "SELECT product_id FROM {$wpdb->prefix}kalayadak24_multivendor_products WHERE seller_id = %d",
+                "SELECT product_id FROM {$wpdb->prefix}mv_seller_products_list
+                 WHERE seller_id = %d",
                 $seller_id
             ));
 
