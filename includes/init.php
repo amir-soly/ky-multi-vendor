@@ -2,6 +2,39 @@
 defined('ABSPATH') || exit;
 
 
+
+function mv_seller_products_data() {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'mv_seller_products_data';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name (
+        mv_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        product_id bigint(20) UNSIGNED NOT NULL,
+        seller_id bigint(20) UNSIGNED NOT NULL,
+        regular_price decimal(10,2) NOT NULL,
+        sale_price decimal(10,2) DEFAULT NULL,
+        from_sale_date date DEFAULT NULL,
+        to_sale_date date DEFAULT NULL,
+        stock int(11) NOT NULL,
+        min_stock int(11) NOT NULL,
+        sold_individually boolean DEFAULT FALSE,
+        status varchar(20) NOT NULL,
+        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+        updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (mv_id),
+        KEY product_id (product_id),
+        KEY seller_id (seller_id)
+    ) $charset_collate;";
+    
+     $wpdb->query($sql);
+
+}
+
+add_action('plugins_loaded', 'mv_seller_products_data');
+
+
 // add the template to the list of page templates
 add_filter('theme_page_templates', 'add_dashboard_seller_template');
 function add_dashboard_seller_template($templates)
@@ -46,7 +79,7 @@ function is_product_on_sale($mv_id)
 
     $prefix = $wpdb->prefix;
     $result = $wpdb->get_row($wpdb->prepare(
-        "SELECT sale_price, from_sale_date, to_sale_date FROM {$prefix}kalayadak24_multivendor_products WHERE mv_id = %d",
+        "SELECT sale_price, from_sale_date, to_sale_date FROM {$prefix}mv_seller_products_list WHERE mv_id = %d",
         $mv_id
     ));
 
@@ -69,7 +102,7 @@ function update_mv_stock($mv_id, $old_stock, $quantity)
 {
     global $wpdb;
     $new_stock = $old_stock - $quantity;
-    $table_name = $wpdb->prefix . 'kalayadak24_multivendor_products';
+    $table_name = $wpdb->prefix . 'mv_seller_products_list';
     $data = array(
         'stock' => $new_stock
     );
@@ -101,7 +134,7 @@ function add_custom_price($cart_object) {
 
         // دریافت قیمت محصول از جدول بر اساس seller_id و product_id
         $query = $wpdb->prepare(
-            "SELECT regular_price, sale_price FROM {$prefix}kalayadak24_multivendor_products WHERE product_id = %d AND seller_id = %d",
+            "SELECT regular_price, sale_price FROM {$prefix}mv_seller_products_list WHERE product_id = %d AND seller_id = %d",
             $product_id, $seller_id
         );
         $row = $wpdb->get_row($query);
@@ -206,7 +239,7 @@ function mv_get_store_data($seller_id, $meta_field) {
     }
 
     if (isset($store_data[$meta_field]) && !empty($store_data[$meta_field])) {
-        echo  esc_html($store_data[$meta_field]);
+        return esc_html($store_data[$meta_field]);
     } else {
         // switch ($meta_field) {
         //     case 'seller_status':
