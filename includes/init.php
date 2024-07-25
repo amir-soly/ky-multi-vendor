@@ -154,14 +154,12 @@ function transfer_seller_id_to_order_items($item, $cart_item_key, $values, $orde
         $item->add_meta_data('seller_id', $values['seller_id'], true);
     }
 }
-
 add_action('woocommerce_after_order_itemmeta', 'display_seller_id_in_admin_order_items', 10, 3);
 function display_seller_id_in_admin_order_items($item_id, $item, $product) {
     if ($item->get_meta('seller_id')) {
         echo '<p><strong>' . __('Seller ID') . ':</strong> ' . $item->get_meta('seller_id') . '</p>';
     }
 }
-
 function get_orders_by_seller_id($seller_id) {
     $orders_by_seller = [];
 
@@ -198,8 +196,6 @@ function get_orders_by_seller_id($seller_id) {
 
     return $orders_by_seller;
 }
-
-
 function mv_seller_store_info_meta($seller_id, $store_data, $meta_field) {
     $seller_id = intval($seller_id);
     
@@ -223,8 +219,6 @@ function mv_seller_store_info_meta($seller_id, $store_data, $meta_field) {
     return $data_check;
 
 }
-
-
 function mv_get_store_data($seller_id, $meta_field) {
     $seller_id = intval($seller_id);
 
@@ -271,3 +265,70 @@ function mv_get_store_data($seller_id, $meta_field) {
     }
 }
 
+function mv_seller_info_meta($seller_id, $seller_data, $meta_field) {
+    $seller_id = intval($seller_id);
+    
+    $seller_data = sanitize_text_field($seller_data);
+    $meta_field = sanitize_text_field($meta_field);
+    
+    $valid_meta_fields = array('seller_email', 'seller_phone', 'seller_national_code', 'seller_last_name', 'seller_first_name');
+    if (!in_array($meta_field, $valid_meta_fields)) {
+        return;
+    }
+    
+    $current_seller_data = get_user_meta($seller_id, 'mv_seller_data', true);
+    
+    if (!is_array($current_seller_data)) {
+        $current_seller_data = array();
+    }
+
+    $current_seller_data[$meta_field] = $seller_data;
+
+    $data_check = update_user_meta($seller_id, 'mv_seller_data', $current_seller_data);
+    return $data_check;
+
+}
+function mv_get_seller_data($seller_id, $meta_field) {
+    $seller_id = intval($seller_id);
+
+    $meta_field = sanitize_text_field($meta_field);
+
+    $valid_meta_fields = array('seller_email', 'seller_phone', 'seller_national_code', 'seller_last_name', 'seller_first_name');
+    
+
+    $seller_data = get_user_meta($seller_id, 'mv_seller_data', true);
+
+    if (!is_array($seller_data)) {
+        $seller_data = array();
+    }
+
+    if (isset($seller_data[$meta_field]) && !empty($seller_data[$meta_field])) {
+        return esc_html($seller_data[$meta_field]);
+    } else {
+        // switch ($meta_field) {
+        //     case 'seller_status':
+        //         $not_set_message = 'وضعیت';
+        //         break;
+        //     case 'store_bio':
+        //         $not_set_message = 'درباره ما';
+        //         break;
+        //     case 'store_name':
+        //         $not_set_message = 'فروشگاه';
+        //         break;
+        //     case 'store_phone':
+        //         $not_set_message = 'شماره تماس';
+        //         break;
+        //     case 'store_site':
+        //         $not_set_message = 'وبسایت';
+        //         break;
+        //     case 'store_vacation':
+        //         $not_set_message = 'تعطیلات';
+        //         break;
+            
+        // }
+        // echo  esc_html($not_set_message) ;
+
+
+        return false;
+    }
+}

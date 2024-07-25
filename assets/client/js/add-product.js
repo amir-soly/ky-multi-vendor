@@ -169,7 +169,7 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 let data = response.data;
-                if (data.is_sent) {
+                if (data.success) {
                     $('#modal-product-info').addClass('opacity-0 invisible');
                     $('#modal-add-product').addClass('opacity-0 invisible');
                     $('#overlay-modal-product').addClass('opacity-0 invisible');
