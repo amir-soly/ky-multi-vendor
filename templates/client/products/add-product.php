@@ -45,23 +45,23 @@ defined('ABSPATH') || exit;
                         <table class="text-xxs table-fixed">
                             <tr>
                                 <td class="font-bold px-2 py-1">عنوان کالا</td>
-                                <td class="px-2 py-1">صافی گیربکس هیوندای توسان (ix35) کد اتاق LM جنیون پارت 2014 تا 2015 فیس لیفت</td>
+                                <td id="popup-title" class="px-2 py-1"></td>
                             </tr>
                             <tr>
                                 <td class="font-bold px-2 py-1">کد کالا (DKP)</td>
-                                <td class="px-2 py-1"></td>
+                                <td id="popup-sku" class="px-2 py-1"></td>
                             </tr>
                             <tr>
                                 <td class="font-bold px-2 py-1">قیمت مرجع</td>
-                                <td class="px-2 py-1">600,000</td>
+                                <td id="popup-price" class="px-2 py-1"></td>
                             </tr>
                             <tr>
                                 <td class="font-bold px-2 py-1">کمیسیون</td>
-                                <td class="px-2 py-1">%۹</td>
+                                <td id="popup-commission" class="px-2 py-1"></td>
                             </tr>
                             <tr>
                                 <td class="font-bold px-2 py-1">برند</td>
-                                <td class="px-2 py-1">متفرقه</td>
+                                <td id="popup-brand" class="px-2 py-1"></td>
                             </tr>
                         </table>
                     </div>
@@ -70,7 +70,7 @@ defined('ABSPATH') || exit;
             <hr class="border-slate-300 my-3">
             <div class="flex items-center justify-end gap-2.5">
                 <button class="close-modal-product-info !bg-lite-gray !text-secondary block rounded-full py-2.5 px-10 font-bold">بازگشت</button>
-                <button class="!bg-primary !text-secondary block rounded-full py-2.5 px-4 font-bold">فروش همین کالا</button>
+                <button class="!bg-primary !text-secondary block rounded-full py-2.5 px-4 font-bold sale-this">فروش همین کالا</button>
             </div>
         </div>
     </div>
@@ -119,7 +119,7 @@ defined('ABSPATH') || exit;
                         <input type="checkbox" name="mv_sold_individually" id="mv_sold_individually" value="yes">
                     </div>
                 </div>
-                <button type="submit" class="!bg-primary !text-secondary block rounded-full py-3 font-bold w-full">ثبت محصول</button>
+                <button type="submit" id="final_submit_add" product-id="" user-id="" class="!bg-primary !text-secondary block rounded-full py-3 font-bold w-full">ثبت محصول</button>
             </form>
         </div>
     </div>

@@ -6,7 +6,7 @@ global $wpdb;
 
 $seller_id = get_current_user_id();
 
-$result = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}mv_seller_products_list WHERE seller_id = %d", $seller_id));
+$result = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}mv_seller_products_data WHERE seller_id = %d", $seller_id));
 $total_count = count($result);
 
 $product_categories = get_terms(array(

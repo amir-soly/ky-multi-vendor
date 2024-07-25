@@ -79,7 +79,7 @@ function is_product_on_sale($mv_id)
 
     $prefix = $wpdb->prefix;
     $result = $wpdb->get_row($wpdb->prepare(
-        "SELECT sale_price, from_sale_date, to_sale_date FROM {$prefix}mv_seller_products_list WHERE mv_id = %d",
+        "SELECT sale_price, from_sale_date, to_sale_date FROM {$prefix}mv_seller_products_data WHERE mv_id = %d",
         $mv_id
     ));
 
@@ -102,7 +102,7 @@ function update_mv_stock($mv_id, $old_stock, $quantity)
 {
     global $wpdb;
     $new_stock = $old_stock - $quantity;
-    $table_name = $wpdb->prefix . 'mv_seller_products_list';
+    $table_name = $wpdb->prefix . 'mv_seller_products_data';
     $data = array(
         'stock' => $new_stock
     );
@@ -134,7 +134,7 @@ function add_custom_price($cart_object) {
 
         // دریافت قیمت محصول از جدول بر اساس seller_id و product_id
         $query = $wpdb->prepare(
-            "SELECT regular_price, sale_price FROM {$prefix}mv_seller_products_list WHERE product_id = %d AND seller_id = %d",
+            "SELECT regular_price, sale_price FROM {$prefix}mv_seller_products_data WHERE product_id = %d AND seller_id = %d",
             $product_id, $seller_id
         );
         $row = $wpdb->get_row($query);
