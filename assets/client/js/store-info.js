@@ -1,3 +1,5 @@
+import {customMessage} from './functions.js?v=1.0.0';
+
 jQuery(document).ready(function($) {
     // open Modal
     $(document).on('click', '.open-modal', function() {
@@ -23,16 +25,15 @@ jQuery(document).ready(function($) {
         $('#modal-store-info, #overlay-modal-store-info').addClass('opacity-0 invisible');
     });
     
-    $(document).on('submit', '#store_status_form, #store_name_form, #store_about_form, #store_landline_form, #store_website_form, #store_holidays_form', function(e) {
-
+    $(document).on('submit', '#store_name_form, #store_about_form, #store_landline_form, #store_website_form', function(e) {
         e.preventDefault();
 
         let formData = $(this).serialize();
-        let ajaxUrl = $('input[name="ajax_url"]').val();
-
+        let submitButton = $(this).find('button[type="submit"]');
+        submitButton.prop('disabled', true).html('<svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="21px" height="21px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg>');
         
         $.ajax({
-            url: ajaxUrl,
+            url: stm_wpcfto_ajaxurl,
             type: 'POST',
             data: {
                 action: 'submit_store_status',
@@ -41,23 +42,30 @@ jQuery(document).ready(function($) {
             beforeSend: function() {
             },
             success: function(response) {
-                console.log(response.success);
+                submitButton.prop('disabled', false).html('تایید');
+
                 if (response.success) {
                     $('#modal-store-info, #overlay-modal-store-info').addClass('opacity-0 invisible');
                     $('#loader').removeClass('opacity-0 invisible');
-                    loadTemplate(ajaxUrl);
+                    loadTemplate();
+                    
+                    customMessage('اطلاعات با موفقیت ثبت شد.', 'success');
                 }
+                console.log(response.success);
             },
             error: function(error) {
+                submitButton.prop('disabled', false).html('تایید');
+                customMessage('مشکلی پیش آمده دوباره امتحان کنید.', 'error');
+                
                 console.error('Error in form submission', error);
             }
         });
     });
 
 
-    function loadTemplate(ajaxUrl) {
+    function loadTemplate() {
         $.ajax({
-            url: ajaxUrl,
+            url: stm_wpcfto_ajaxurl,
             type: 'POST',
             data: {
                 action: 'mv_get_template_part',
@@ -73,5 +81,4 @@ jQuery(document).ready(function($) {
             }
         });
     };
-
 });
