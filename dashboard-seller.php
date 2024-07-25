@@ -35,6 +35,8 @@ $profile_image = 0;
                             include MV_DIR_PATH . '/templates/client/profile/seller-info.php';
                         } elseif(is_dashboard_seller_endpoint('accounting-information')) {
                             include MV_DIR_PATH . '/templates/client/profile/accounting-info.php';
+                        } elseif(is_dashboard_seller_endpoint('agreement')) {
+                            include MV_DIR_PATH . '/templates/client/profile/agreement.php';
                         }
                     ?>
                 </div>
