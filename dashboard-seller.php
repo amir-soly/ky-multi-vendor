@@ -15,6 +15,7 @@ $profile_image = 0;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+    <div id="messages-container" class="fixed right-1/2 top-6 translate-x-1/2 z-50 flex flex-col gap-3"></div>
     <main>
         <div class="container my-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
