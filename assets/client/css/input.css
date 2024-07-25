@@ -32,4 +32,63 @@
     .appearance-select {
         background-position: left .5rem center;
     }
+    .message {
+        animation: show_message .4s ease forwards;
+        @apply py-3 px-4 rounded-full min-w-80 w-full text-[#0e0c0a] font-bold overflow-hidden;
+    }
+    .message.error{
+        @apply bg-[#fd9191] shadow-[0_0_20px_1px_#ffabab];
+    }
+    .message.warnig{
+        @apply bg-[#fdd8b0] shadow-[0_0_20px_1px_#ffddb8];
+    }
+    .message.success{
+        @apply bg-[#b3fab6] shadow-[0_0_20px_1px_#b8ffbc];
+    }
+    .message::before{
+        content: '';
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        right: 0;
+        bottom: 0;
+        animation: progress 5s linear forwards;
+        background-color: #0e0c0a;
+    }
+    .message.hide{
+        animation: hide_message .3s ease forwards;
+    }
+    @keyframes show_message{
+        0%{
+            transform: translateY(100%);
+        }
+        40%{
+            transform: translateY(-5%);
+        }
+        80%{
+            transform: translateY(5%);
+        }
+        100%{
+            transform: translateY(0);
+        }
+    }
+    @keyframes hide_message {
+        0% {
+            transform: translateY(0%);
+        }
+        40% {
+            transform: translateY(-10%);
+        }
+        80% {
+            transform: translateY(50%);
+        }
+        100% {
+            transform: translateY(-250%);
+        }
+    }
+    @keyframes progress{
+        100%{
+            width: 0%;
+        }
+    }
 }
