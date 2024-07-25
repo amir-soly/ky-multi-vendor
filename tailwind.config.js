@@ -3,11 +3,7 @@
 module.exports = {
   content: [
     'dashboard-seller.php',
-    'templates/client/products/products.php',
-    'templates/client/products/add-product.php',
-    'templates/client/profile/store-info.php',
-    'templates/client/profile-fields/store-info.php',
-    'templates/client/orders.php',
+    'templates/client/**/*.php',
     'assets/client/js/add-product.js'
   ],
   theme: {
