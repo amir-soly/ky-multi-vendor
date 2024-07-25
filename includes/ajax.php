@@ -5,8 +5,7 @@ function check_product_existence($product_id, $user_id)
 {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'mv_seller_products_list
-    ';
+    $table_name = $wpdb->prefix . 'mv_seller_products_data';
 
     $query = $wpdb->prepare(
         "SELECT COUNT(*) FROM $table_name WHERE product_id = %d AND seller_id = %d",
@@ -27,8 +26,7 @@ function insert_product_data_into_table($product_id, $seller_id, $regular_price,
 {
     global $wpdb;
 
-    $table_name = $wpdb->prefix . 'mv_seller_products_list
-    ';
+    $table_name = $wpdb->prefix . 'mv_seller_products_data';
 
     $data = array(
         'product_id' => $product_id,
@@ -189,7 +187,7 @@ function handle_search_products() {
             $mainIDs = wp_list_pluck($search_results, 'ID');
             $seller_id = get_current_user_id();
             $result = $wpdb->get_results($wpdb->prepare(
-                "SELECT product_id FROM {$wpdb->prefix}mv_seller_products_list
+                "SELECT product_id FROM {$wpdb->prefix}mv_seller_products_data
                  WHERE seller_id = %d",
                 $seller_id
             ));
@@ -221,7 +219,7 @@ function handle_search_products() {
         if ($search_results) {
             $seller_id = get_current_user_id();
             $result = $wpdb->get_results($wpdb->prepare(
-                "SELECT product_id FROM {$wpdb->prefix}mv_seller_products_list
+                "SELECT product_id FROM {$wpdb->prefix}mv_seller_products_data
                  WHERE seller_id = %d",
                 $seller_id
             ));
@@ -231,6 +229,7 @@ function handle_search_products() {
             $products = array_map(function($product) use ($seller_product_ids) {
                 $product_id = $product->ID;
                 $wc_product = wc_get_product($product_id);
+                
                 return array(
                     'seller_id' => get_current_user_id(),
                     'product_id' => $product_id,
@@ -239,7 +238,8 @@ function handle_search_products() {
                     'price' => wc_price($wc_product->get_price()),
                     'terms' => wc_get_product_category_list($product_id),
                     'exists' => in_array($product_id, $seller_product_ids) ? 'true' : 'false',
-                );
+                    'sku' => $wc_product->get_sku(),
+                );                
             }, $search_results);
 
             wp_send_json_success(array('products' => $products));

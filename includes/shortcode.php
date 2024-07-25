@@ -10,7 +10,7 @@ function mv_seller_list()
     $product_id = $post->ID;
     $prefix = $wpdb->prefix;
     $result = $wpdb->get_results($wpdb->prepare(
-        "SELECT * FROM {$prefix}mv_seller_products_list WHERE product_id = %d",
+        "SELECT * FROM {$prefix}mv_seller_products_data WHERE product_id = %d",
         $product_id
     ));
 

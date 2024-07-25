@@ -52,7 +52,7 @@ jQuery(document).ready(function ($) {
             if (product.exists == 'true') {
                 addProductBtn = `<button class="py-2.5 px-10 text-sm rounded-3xl font-bold bg-primary text-secondary transition-all">فروشنده هستید</button>`;
             } else {
-                addProductBtn = `<button class="mv_add_product_too py-2.5 px-10 text-sm rounded-3xl font-bold border border-gray transition-all hover:bg-primary hover:text-secondary hover:border-primary" product-id="${product.product_id}" user-id="${product.seller_id}">شما هم بفروشید</button>`;
+                addProductBtn = `<button class="mv_add_product_too py-2.5 px-10 text-sm rounded-3xl font-bold border border-gray transition-all hover:bg-primary hover:text-secondary hover:border-primary" product-id="${product.product_id}" user-id="${product.seller_id}" product-sku="${product.sku}">شما هم بفروشید</button>`;
             }
             html += `
                 <div class="mb-6 pb-6 border-b border-lite-gray last:border-none">
@@ -87,36 +87,62 @@ jQuery(document).ready(function ($) {
     // add product
     $(document).on("click", ".mv_add_product_too", function (e) {
         e.preventDefault();
+        $('#overlay-modal-product').removeClass('opacity-0 invisible');
+        $('#modal-product-info').removeClass('opacity-0 invisible');
 
+        $(".close-modal-product-info").on("click", function () {
+            $('#modal-product-info').addClass('opacity-0 invisible');
+            $('#overlay-modal-product').addClass('opacity-0 invisible');
+
+        });
+
+        let $parentDiv = $(this).closest('.mb-6.pb-6.border-b');
         let productId = $(this).attr("product-id");
-        let userId = $(this).attr("user-id");
         let ajaxUrl = $(this).attr("ajax-url");
         let nonce = $(this).attr("wp-nonce");
+        let userId = $(this).attr("user-id");
+        let productSku = $(this).attr("product-sku");
+        let title = $parentDiv.find('p.text-xs.text-paragraph').text();
+        let thumbnail = $parentDiv.find('img').attr('src');
+        let price = $parentDiv.find('span.woocommerce-Price-amount').text();
+        let commission = '۹%'; 
+        let brand = 'متفرقه';
+        console.log(productId);
+        $('#popup-title').text(title);
+        $('#popup-sku').text(productSku);
+        $('#popup-price').text(price);
+        $('#popup-commission').text(commission);
+        $('#popup-brand').text(brand);
+        $('#popup-image').attr('src', thumbnail);
 
-        $("#mv_submit_product").data("product-id", productId);
-        $("#mv_submit_product").data("user-id", userId);
-        $("#mv_submit_product").data("ajax-url", ajaxUrl);
-        $("#mv_submit_product").data("wp-nonce", nonce);
+        $("#final_submit_add").attr("product-id", productId);
+        $("#final_submit_add").attr("user-id", userId);
+
+        $(".sale-this").on("click", function () {
+            $('#modal-add-product').removeClass('opacity-0 invisible');
+            $('#modal-product-info').addClass('opacity-0 invisible');
+
+        });
+
     });
 
     $("#close-modal-add-product").on("click", function () {
-
+        $('#modal-product-info').addClass('opacity-0 invisible');
+        $('#modal-add-product').addClass('opacity-0 invisible');
+        $('#overlay-modal-product').addClass('opacity-0 invisible');
     });
 
-    // show and hide sales date fields
     $("#toggle-sale-schedule").on("click", function () {
         $(".sale-date-fields").toggleClass("hidden");
         let isHidden = $(".sale-date-fields").hasClass("hidden");
         $(this).text(isHidden ? "زمان بندی فروش" : "لغو زمان بندی");
     });
 
-    // send AJAX request
-    $("#add_product_form").on("click", function (e) {
+    $("#add_product_form").on("submit", function (e) {
         e.preventDefault();
 
-        let productId = $(this).data("product-id");
-        let userId = $(this).data("user-id");
-        let nonce = $(this).data("wp-nonce");
+        let productId =  $('#final_submit_add').attr("product-id");
+        let userId =  $('#final_submit_add').attr("user-id");
 
         let regularPrice = $("#mv_regular_price").val();
         let salePrice = $("#mv_sale_price").val();
@@ -124,14 +150,13 @@ jQuery(document).ready(function ($) {
         let toSaleDate = $("#mv_to_sale_date").val();
         let stock = $("#mv_stock").val();
         let minStock = $("#mv_min_stock").val();
-        let soldIndividually = $("#mv_sold_individually").is(":checked") ? "yes" : "no";
+        let soldIndividually = $("#mv_sold_individually").is(":checked") ? "1" : "0";
 
         $.ajax({
             type: "POST",
             url: stm_wpcfto_ajaxurl,
             data: {
                 action: "mv_add_product",
-                nonce: nonce,
                 product_id: productId,
                 user_id: userId,
                 regular_price: regularPrice,
@@ -145,8 +170,9 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 let data = response.data;
                 if (data.is_sent) {
-                    $("#popup_overlay").hide();
-                    $("#add_product_popup").hide();
+                    $('#modal-product-info').addClass('opacity-0 invisible');
+                    $('#modal-add-product').addClass('opacity-0 invisible');
+                    $('#overlay-modal-product').addClass('opacity-0 invisible');
                     clearForm();
                 } else {
                     let message = data.message;
@@ -176,9 +202,9 @@ jQuery(document).ready(function ($) {
 
 
 // document.getElementById('get_orders_export').addEventListener('click', function() {
-//     var sellerId = '114'; // شناسه فروشنده را به درستی مقداردهی کنید
+//     let sellerId = '114'; // شناسه فروشنده را به درستی مقداردهی کنید
 
-//     var formData = new FormData();
+//     let formData = new FormData();
 //     formData.append('action', 'export_orders');
 //     formData.append('seller_id', sellerId);
 
@@ -188,8 +214,8 @@ jQuery(document).ready(function ($) {
 //     })
 //     .then(response => response.blob())
 //     .then(blob => {
-//         var url = window.URL.createObjectURL(blob);
-//         var a = document.createElement('a');
+//         let url = window.URL.createObjectURL(blob);
+//         let a = document.createElement('a');
 //         a.style.display = 'none';
 //         a.href = url;
 //         a.download = 'orders.xlsx';
