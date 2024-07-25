@@ -70,7 +70,7 @@ defined('ABSPATH') || exit;
             <hr class="border-slate-300 my-3">
             <div class="flex items-center justify-end gap-2.5">
                 <button class="close-modal-product-info !bg-lite-gray !text-secondary block rounded-full py-2.5 px-10 font-bold">بازگشت</button>
-                <button class="!bg-primary !text-secondary block rounded-full py-2.5 px-4 font-bold sale-this">فروش همین کالا</button>
+                <button id="open-modal-add-product" class="!bg-primary !text-secondary block rounded-full py-2.5 px-4 font-bold">فروش همین کالا</button>
             </div>
         </div>
     </div>
@@ -119,7 +119,7 @@ defined('ABSPATH') || exit;
                         <input type="checkbox" name="mv_sold_individually" id="mv_sold_individually" value="yes">
                     </div>
                 </div>
-                <button type="submit" id="final_submit_add" product-id="" user-id="" class="!bg-primary !text-secondary block rounded-full py-3 font-bold w-full">ثبت محصول</button>
+                <button type="submit" id="add_product_submit" product-id="" user-id="" class="!bg-primary !text-secondary block rounded-full py-3 font-bold w-full">ثبت محصول</button>
             </form>
         </div>
     </div>

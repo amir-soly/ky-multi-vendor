@@ -1,3 +1,5 @@
+import {handleResponse, customMessage} from './functions.js?v=1.0.0';
+
 jQuery(document).ready(function ($) {
     // event listener for the search submit button
     $('#mv_search_prodcu_form').submit(function (e) {
@@ -6,12 +8,12 @@ jQuery(document).ready(function ($) {
         let searchValue = $('#mv_product_search').val().trim();
 
         if (searchValue === '') {
-            alert('لطفاً نام یک محصول را وارد کنید.');
+            customMessage('لطفاً نام یک محصول را وارد کنید.', 'error');
             return;
         }
 
-        let originalText = $('#mv_search_submit').text();
-        $('#mv_search_submit').html('<svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg>');
+        let searchSubmitText = $('#mv_search_submit').text();
+        $('#mv_search_submit').prop('disabled', true).html('<svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg>');
 
 
         // perform AJAX request
@@ -27,18 +29,18 @@ jQuery(document).ready(function ($) {
                 $('#product_results_container').show();
                 $('#results_count').html(`${response.data.products.length} مورد`);
 
-                $('#mv_search_submit').html(originalText);
+                $('#mv_search_submit').prop('disabled', false).html(searchSubmitText);
                 if (response.success) {
                     displayProducts(response.data.products);
                 } else {
                     $('#product_results').html('<p class="text-center text-xl">محصولی یافت نشد!</p>');
                 }
             },
-            error: function (xhr, status, error) {
-                $('#product_results_container').show();
-                $('#mv_search_submit').html(originalText);
-
-                $('#product_results').html('<p class="text-center text-xl">مشکلی پیش آمده دوباره امتحان کنید.</p>');
+            error: function () {
+                $('#product_results_container').hide();
+                $('#mv_search_submit').prop('disabled', false).html(searchSubmitText);
+                
+                customMessage('مشکلی پیش آمده دوباره امتحان کنید.', 'error');
             },
         });
     });
@@ -87,19 +89,20 @@ jQuery(document).ready(function ($) {
     // add product
     $(document).on("click", ".mv_add_product_too", function (e) {
         e.preventDefault();
-        $('#overlay-modal-product').removeClass('opacity-0 invisible');
         $('#modal-product-info').removeClass('opacity-0 invisible');
+        $('#overlay-modal-product').removeClass('opacity-0 invisible');
 
-        $(".close-modal-product-info").on("click", function () {
+        $('.close-modal-product-info').on('click', function () {
             $('#modal-product-info').addClass('opacity-0 invisible');
             $('#overlay-modal-product').addClass('opacity-0 invisible');
 
         });
 
+        // Not true
         let $parentDiv = $(this).closest('.mb-6.pb-6.border-b');
         let productId = $(this).attr("product-id");
-        let ajaxUrl = $(this).attr("ajax-url");
-        let nonce = $(this).attr("wp-nonce");
+        // let ajaxUrl = $(this).attr("ajax-url");
+        // let nonce = $(this).attr("wp-nonce");
         let userId = $(this).attr("user-id");
         let productSku = $(this).attr("product-sku");
         let title = $parentDiv.find('p.text-xs.text-paragraph').text();
@@ -107,7 +110,7 @@ jQuery(document).ready(function ($) {
         let price = $parentDiv.find('span.woocommerce-Price-amount').text();
         let commission = '۹%'; 
         let brand = 'متفرقه';
-        console.log(productId);
+
         $('#popup-title').text(title);
         $('#popup-sku').text(productSku);
         $('#popup-price').text(price);
@@ -115,48 +118,50 @@ jQuery(document).ready(function ($) {
         $('#popup-brand').text(brand);
         $('#popup-image').attr('src', thumbnail);
 
-        $("#final_submit_add").attr("product-id", productId);
-        $("#final_submit_add").attr("user-id", userId);
+        $("#add_product_submit").attr("product-id", productId);
+        $("#add_product_submit").attr("user-id", userId);
 
-        $(".sale-this").on("click", function () {
+        $('#open-modal-add-product').on('click', function () {
             $('#modal-add-product').removeClass('opacity-0 invisible');
             $('#modal-product-info').addClass('opacity-0 invisible');
-
         });
-
     });
 
-    $("#close-modal-add-product").on("click", function () {
+    $('#close-modal-add-product').on('click', function () {
         $('#modal-product-info').addClass('opacity-0 invisible');
         $('#modal-add-product').addClass('opacity-0 invisible');
         $('#overlay-modal-product').addClass('opacity-0 invisible');
+        clearForm();
     });
 
-    $("#toggle-sale-schedule").on("click", function () {
-        $(".sale-date-fields").toggleClass("hidden");
-        let isHidden = $(".sale-date-fields").hasClass("hidden");
-        $(this).text(isHidden ? "زمان بندی فروش" : "لغو زمان بندی");
+    $('#toggle-sale-schedule').on('click', function () {
+        $('.sale-date-fields').toggleClass('hidden');
+        let isHidden = $('.sale-date-fields').hasClass('hidden');
+        $(this).text(isHidden ? 'زمان بندی فروش' : 'لغو زمان بندی');
     });
 
-    $("#add_product_form").on("submit", function (e) {
+    $('#add_product_form').submit('submit', function (e) {
         e.preventDefault();
 
-        let productId =  $('#final_submit_add').attr("product-id");
-        let userId =  $('#final_submit_add').attr("user-id");
+        let addProductSubmitText = $('#add_product_submit').text();
+        $('#add_product_submit').prop('disabled', true).html('<svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="21px" height="21px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg>');
 
-        let regularPrice = $("#mv_regular_price").val();
-        let salePrice = $("#mv_sale_price").val();
-        let fromSaleDate = $("#mv_from_sale_date").val();
-        let toSaleDate = $("#mv_to_sale_date").val();
-        let stock = $("#mv_stock").val();
-        let minStock = $("#mv_min_stock").val();
-        let soldIndividually = $("#mv_sold_individually").is(":checked") ? "1" : "0";
+        let productId =  $('#add_product_submit').attr('product-id');
+        let userId =  $('#add_product_submit').attr('user-id');
+
+        let regularPrice = $('#mv_regular_price').val();
+        let salePrice = $('#mv_sale_price').val();
+        let fromSaleDate = $('#mv_from_sale_date').val();
+        let toSaleDate = $('#mv_to_sale_date').val();
+        let stock = $('#mv_stock').val();
+        let minStock = $('#mv_min_stock').val();
+        let soldIndividually = $('#mv_sold_individually').is(':checked') ? '1' : '0';
 
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: stm_wpcfto_ajaxurl,
             data: {
-                action: "mv_add_product",
+                action: 'mv_add_product',
                 product_id: productId,
                 user_id: userId,
                 regular_price: regularPrice,
@@ -169,33 +174,37 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 let data = response.data;
-                if (data.is_sent) {
+                $('#add_product_submit').prop('disabled', false).html(addProductSubmitText);
+
+                if (response.success) {
                     $('#modal-product-info').addClass('opacity-0 invisible');
                     $('#modal-add-product').addClass('opacity-0 invisible');
                     $('#overlay-modal-product').addClass('opacity-0 invisible');
                     clearForm();
+                    
+                    customMessage('محصول با موفقیت ثبت شد.', 'success');
                 } else {
-                    let message = data.message;
-                    $(".alert-box").empty().slideDown(50).append('<p class="ErrorMessage">' + message + "</p>");
+                    customMessage(data.message, 'error');
                 }
             },
-            error: function (response) {
-                console.log("Error:", response);
+            error: function () {
+                $('#add_product_submit').prop('disabled', false).html(addProductSubmitText);
+                customMessage('مشکلی پیش آمده دوباره امتحان کنید.', 'error');
             },
         });
     });
 
     // clear the form
     function clearForm() {
-        $("#mv_regular_price").val("");
-        $("#mv_sale_price").val("");
-        $("#mv_from_sale_date").val("");
-        $("#mv_to_sale_date").val("");
-        $("#mv_stock").val("");
-        $("#mv_min_stock").val("");
-        $("#mv_sold_individually").prop("checked", false);
-        $("#sale-date-fields").addClass("hidden");
-        $("#toggle-sale-schedule").text("زمان بندی فروش");
+        $('#mv_regular_price').val('');
+        $('#mv_sale_price').val('');
+        $('#mv_from_sale_date').val('');
+        $('#mv_to_sale_date').val('');
+        $('#mv_stock').val('');
+        $('#mv_min_stock').val('');
+        $('#mv_sold_individually').prop('checked', false);
+        $('#sale-date-fields').addClass('hidden');
+        $('#toggle-sale-schedule').text('زمان بندی فروش');
     }
 });
 

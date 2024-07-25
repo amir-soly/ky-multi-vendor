@@ -82,7 +82,6 @@ function mv_add_product()
     if ($user_id == 0) {
         wp_send_json_error(array(
             'message' => 'آیدی کاربر معتبر نیست',
-            'is_sent' => false,
         ));
         die();
     }
@@ -90,7 +89,6 @@ function mv_add_product()
     if ($product_id == 0) {
         wp_send_json_error(array(
             'message' => 'آیدی محصول معتبر نیست',
-            'is_sent' => false,
         ));
         die();
     }
@@ -98,14 +96,12 @@ function mv_add_product()
     if ($regular_price == 0) {
         wp_send_json_error(array(
             'message' => 'مبلغ نمی تواند خالی یا 0 باشد',
-            'is_sent' => false,
         ));
         die();
     }
     if ($sale_price == 0) {
         wp_send_json_error(array(
             'message' => 'مبلغ فروش ویژه نمی تواند خالی یا 0 باشد',
-            'is_sent' => false,
         ));
         die();
     }
@@ -113,19 +109,16 @@ function mv_add_product()
     if ($stock == 0) {
         wp_send_json_error(array(
             'message' => 'موجودی انبار نمی تواند خالی یا 0 باشد',
-            'is_sent' => false,
         ));
         die();
     }
+
     if (!check_product_existence($product_id, $user_id)) {
-
-
         $mv_ID = insert_product_data_into_table($product_id, $user_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status);
 
         if ($mv_ID) {
             wp_send_json_success(array(
                 'message' => 'Product added successfully!',
-                'is_sent' => true,
                 'mv_ID' => $mv_ID
             ));
         } else {
@@ -136,7 +129,6 @@ function mv_add_product()
     } else {
         wp_send_json_error(array(
             'message' => "این محصول برای این کاربر قبلاً ثبت شده است!",
-            'is_sent' => false,
         ));
         die();
     }
