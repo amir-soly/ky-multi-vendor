@@ -43,3 +43,12 @@ function enqueue_scripts() {
 }
 add_action('wp_enqueue_scripts', 'enqueue_scripts');
 
+function add_module_attribute($tag, $handle, $src) {
+    $invalid_handles = array('add-product', 'products', 'store-info', 'accounting-info');
+
+    if (in_array($handle, $invalid_handles)) {
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'add_module_attribute', 10, 3);
