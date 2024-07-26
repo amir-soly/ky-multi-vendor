@@ -288,7 +288,76 @@ function mv_get_template_part() {
     echo $html;
     wp_die();
 }
-
 function mv_template_part( $template ) {
     require MV_DIR_PATH . '/templates/' . $template . '.php';
+}
+
+add_action('wp_ajax_submit_seller_status', 'handle_submit_seller_status');
+add_action('wp_ajax_nopriv_submit_seller_status', 'handle_submit_seller_status');
+
+function handle_submit_seller_status() {
+
+    parse_str($_POST['form_data'], $form_data);
+
+    $seller_id = isset($form_data['seller_id']) ? intval($form_data['seller_id']) : 0;
+    $seller_data = isset($form_data['seller_data']) ? sanitize_text_field($form_data['seller_data']) : '';
+
+    $meta_field = isset($form_data['meta_field']) ? sanitize_text_field($form_data['meta_field']) : '';
+    $user = get_userdata($seller_id);
+
+
+
+    if (!$user && !in_array('mv_seller', $user->roles)) {
+        wp_send_json_error(array(
+            'message' => 'User does not exist or is not seller',
+        ));
+    }
+
+
+    if($meta_field == 'seller_first_name,seller_last_name' ){
+
+        $seller_data1 = isset($form_data['seller_data1']) ? sanitize_text_field($form_data['seller_data1']) : '';
+        $meta_data = array(
+            'field1' =>  $seller_data,
+            'field2' =>  $seller_data1,
+        );
+        $meta_fields = explode(',', $meta_field);
+
+            $index = 0;
+            foreach ($meta_fields as $meta_field) {
+                $data_value = isset($meta_data['field' . ($index + 1)]) ? $meta_data['field' . ($index + 1)] : '';
+                $data_check = mv_seller_info_meta($seller_id, $data_value, $meta_field);
+
+                $index++;
+
+            }
+        
+            if($data_check){
+                wp_send_json_success(array(
+                    'message' => 'store mv_store_data added successfully',
+                ));
+            }else{
+                wp_send_json_error(array(
+                    'message' => 'there is an error while adding',
+                ));
+            }
+    }else{
+
+        $data_check = mv_seller_info_meta($seller_id, $seller_data, $meta_field);
+        if($data_check){
+            wp_send_json_success(array(
+                'message' => 'store mv_store_data added successfully',
+            ));
+        }else{
+            wp_send_json_error(array(
+                'message' => 'there is an error while adding',
+            ));
+        }
+
+    }
+
+
+    
+
+    wp_die();
 }

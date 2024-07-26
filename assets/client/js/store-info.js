@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
 
         
         $.ajax({
-            url: ajaxUrl,
+            url: stm_wpcfto_ajaxurl,
             type: 'POST',
             data: {
                 action: 'submit_store_status',
