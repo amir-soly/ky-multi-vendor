@@ -23,6 +23,8 @@ include MV_DIR_PATH . '/includes/client_scripts.php';
 include MV_DIR_PATH . '/includes/ajax.php';
 include MV_DIR_PATH . '/includes/role.php';
 include MV_DIR_PATH . '/includes/shortcode.php';
+include MV_DIR_PATH . '/includes/functions.php';
+include MV_DIR_PATH . '/includes/admin-menu.php';
 
 
 ?>

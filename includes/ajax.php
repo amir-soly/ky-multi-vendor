@@ -1,70 +1,7 @@
 <?php
 defined('ABSPATH') || exit;
-
-function check_product_existence($product_id, $user_id)
-{
-    global $wpdb;
-
-    $table_name = $wpdb->prefix . 'mv_seller_products_data';
-
-    $query = $wpdb->prepare(
-        "SELECT COUNT(*) FROM $table_name WHERE product_id = %d AND seller_id = %d",
-        $product_id,
-        $user_id
-    );
-
-    $result = $wpdb->get_var($query);
-
-    if ($result > 0) {
-        return true; // Product already exists for this user
-    } else {
-        return false; // Product does not exist for this user
-    }
-}
-
-function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status)
-{
-    global $wpdb;
-
-    $table_name = $wpdb->prefix . 'mv_seller_products_data';
-
-    $data = array(
-        'product_id' => $product_id,
-        'seller_id' => $seller_id,
-        'regular_price' => $regular_price,
-        'sale_price' => $sale_price,
-        'from_sale_date' => $from_sale_date,
-        'to_sale_date' => $to_sale_date,
-        'stock' => $stock,
-        'min_stock' => $min_stock,
-        'sold_individually' => $sold_individually,
-        'status' => $status,
-    );
-
-    $format = array(
-        '%d', // product_id
-        '%d', // seller_id
-        '%f', // regular_price
-        '%f', // sale_price
-        '%s', // from_sale_date
-        '%s', // to_sale_date
-        '%d', // stock
-        '%d', // min_stock
-        '%s', // sold_individually
-        '%s', // status
-    );
-
-    $wpdb->insert($table_name, $data, $format);
-
-    // Check if the insert was successful
-    if ($wpdb->last_error) {
-        return $wpdb->last_error; // Return false if there was an error
-    } else {
-        return $wpdb->insert_id; // Return true if the insert was successful
-    }
-}
-
-
+add_action('wp_ajax_mv_add_product', 'mv_add_product');
+add_action('wp_ajax_nopriv_mv_add_product', 'mv_add_product');
 function mv_add_product()
 {
     $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
@@ -133,11 +70,6 @@ function mv_add_product()
         die();
     }
 }
-add_action('wp_ajax_mv_add_product', 'mv_add_product');
-add_action('wp_ajax_nopriv_mv_add_product', 'mv_add_product');
-
-
-
 add_action('wp_ajax_search_products', 'handle_search_products');
 add_action('wp_ajax_nopriv_search_products', 'handle_search_products');
 function handle_search_products() {
@@ -242,10 +174,8 @@ function handle_search_products() {
 
     wp_die(); // end AJAX execution
 }
-
 add_action('wp_ajax_submit_store_status', 'handle_submit_store_status');
 add_action('wp_ajax_nopriv_submit_store_status', 'handle_submit_store_status');
-
 function handle_submit_store_status() {
 
     parse_str($_POST['form_data'], $form_data);
@@ -275,7 +205,6 @@ function handle_submit_store_status() {
 
     wp_die();
 }
-
 add_action('wp_ajax_mv_get_template_part', 'mv_get_template_part');
 add_action('wp_ajax_nopriv_mv_get_template_part', 'mv_get_template_part');
 function mv_get_template_part() {
@@ -288,13 +217,8 @@ function mv_get_template_part() {
     echo $html;
     wp_die();
 }
-function mv_template_part( $template ) {
-    require MV_DIR_PATH . '/templates/' . $template . '.php';
-}
-
 add_action('wp_ajax_submit_seller_status', 'handle_submit_seller_status');
 add_action('wp_ajax_nopriv_submit_seller_status', 'handle_submit_seller_status');
-
 function handle_submit_seller_status() {
 
     parse_str($_POST['form_data'], $form_data);
