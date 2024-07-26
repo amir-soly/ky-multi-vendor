@@ -87,8 +87,6 @@ $add_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewB
                 <p id="title-modal-store-info" class="text-secondary font-bold">نام فروشگاه را وارد کنید</p>
                 <button id="close-modal-store-info"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none"><path d="M17 1L1 21" stroke="#606060"/><path d="M1.5 1L17.5 21" stroke="#606060"/></svg></button>
             </div>
-            <input type="hidden" name="ajax_url" value="<?php echo admin_url('admin-ajax.php'); ?>">
-
             <form id="store_status_form" class="hidden">
                 <div class="mb-6">
                     <label for="store_status" class="text-secondary font-bold text-base mb-2.5 block">وضعیت فروشنده</label>
