@@ -1,3 +1,5 @@
+import {customMessage} from './functions.js?v=1.0.0';
+
 jQuery(document).ready(function($) {
     // open Modal
     $(document).on('click','.open-modal', function() {
@@ -18,22 +20,19 @@ jQuery(document).ready(function($) {
     });
 
     // close Modal
-     $(document).on('submit','#close-modal-seller-info, #overlay-modal-seller-info', function(e) {
+     $(document).on('click','#close-modal-seller-info, #overlay-modal-seller-info', function() {
         // hide modal and overlay
         $('#modal-seller-info, #overlay-modal-seller-info').addClass('opacity-0 invisible');
     });
 
-    $('#seller_name_form').on('submit', function(e) {
-        e.preventDefault();
-    });
-
     $(document).on('submit', '#seller_email_form, #seller_phone_number_form, #seller_national_code_form, #seller_name_form', function(e) {
-
         e.preventDefault();
 
         let formData = $(this).serialize();
-        let ajaxUrl = $('input[name="ajax_url"]').val();
 
+        let submitButton = $(this).find('button[type="submit"]');
+        submitButton.prop('disabled', true).html('<svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="21px" height="21px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg>');
+        
         console.log(formData);
         $.ajax({
             url: stm_wpcfto_ajaxurl,
@@ -45,14 +44,21 @@ jQuery(document).ready(function($) {
             beforeSend: function() {
             },
             success: function(response) {
+                submitButton.prop('disabled', false).html('تایید');
+
                 console.log(response.success);
                 if (response.success) {
                     $('#modal-seller-info, #overlay-modal-seller-info').addClass('opacity-0 invisible');
                     $('#loader').removeClass('opacity-0 invisible');
                     loadTemplate(stm_wpcfto_ajaxurl);
+
+                    customMessage('اطلاعات با موفقیت ثبت شد.', 'success');
                 }
             },
             error: function(error) {
+                submitButton.prop('disabled', false).html('تایید');
+                customMessage('مشکلی پیش آمده دوباره امتحان کنید.', 'error');
+
                 console.error('Error in form submission', error);
             }
         });
