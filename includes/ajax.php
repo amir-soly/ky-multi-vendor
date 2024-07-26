@@ -112,9 +112,8 @@ function mv_add_product()
         ));
         die();
     }
+
     if (!check_product_existence($product_id, $user_id)) {
-
-
         $mv_ID = insert_product_data_into_table($product_id, $user_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status);
 
         if ($mv_ID) {
