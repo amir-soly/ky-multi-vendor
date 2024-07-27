@@ -5,9 +5,15 @@ defined( 'ABSPATH' ) || exit;
 function enqueue_scripts_head() {
     if (is_page_template('dashboard-seller.php')) { ?> 
         <style>
-            :root {
-         
-            }
+            <?php
+            if (is_dashboard_seller_endpoint('documents')) { ?> 
+                .image-button {
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                }
+            <?php }
+            ?>
         </style>
     <?php }
 }
@@ -24,6 +30,7 @@ function enqueue_scripts() {
     wp_register_script('store-info', MV_DIR_URL . 'assets/client/js/store-info.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/store-info.js'), true);
     wp_register_script('seller-info', MV_DIR_URL . 'assets/client/js/seller-info.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/seller-info.js'), true);
     wp_register_script('accounting-info', MV_DIR_URL . 'assets/client/js/accounting-info.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/accounting-info.js'), true);
+    wp_register_script('documents', MV_DIR_URL . 'assets/client/js/documents.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/documents.js'), true);
 
     if (is_page_template('dashboard-seller.php')) {
         wp_enqueue_style('output-tailwind');
@@ -38,6 +45,8 @@ function enqueue_scripts() {
             wp_enqueue_script('seller-info');
         } elseif (is_dashboard_seller_endpoint('accounting-information')) {
             wp_enqueue_script('accounting-info');
+        } elseif (is_dashboard_seller_endpoint('documents')) {
+            wp_enqueue_script('documents');
         }
     }
 }
