@@ -63,6 +63,7 @@ function dashboard_seller_endpoints()
     add_rewrite_endpoint('seller-information', EP_PAGES);
     add_rewrite_endpoint('accounting-information', EP_PAGES);
     add_rewrite_endpoint('agreement', EP_PAGES);
+    add_rewrite_endpoint('documents', EP_PAGES);
 
     // Ensure the endpoints are properly flushed
     flush_rewrite_rules();
