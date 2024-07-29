@@ -22,11 +22,10 @@ function mv_admin_panel_menu() {
 add_action('admin_menu', 'mv_admin_panel_menu');
 
 function mv_management() {
-    require __DIR__ . '/products.php';
 
 }
 
 function mv_products() {
-    echo '<h1>Welcome to My Custom Submenu Page</h1>';
-    echo '<p>Here is the content of my custom submenu page.</p>';
+    require __DIR__ . '/products.php';
+
 }

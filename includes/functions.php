@@ -72,10 +72,12 @@ function check_product_existence($product_id, $user_id)
         return false; // Product does not exist for this user
     }
 }
-function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status)
+function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status ,$action)
 {
     global $wpdb;
-
+    if (empty($action)) {
+        $action = 'insert'; // مقدار پیش‌فرض برای اکشن
+    }
     $table_name = $wpdb->prefix . 'mv_seller_products_data';
 
     $data = array(
@@ -104,13 +106,34 @@ function insert_product_data_into_table($product_id, $seller_id, $regular_price,
         '%s', // status
     );
 
-    $wpdb->insert($table_name, $data, $format);
+    if ($action === 'edit') {
+        // اگر اکشن edit بود، بروزرسانی رکورد
+        $where = array(
+            'product_id' => $product_id,
+            'seller_id' => $seller_id
+        );
+        $where_format = array(
+            '%d', // product_id
+            '%d'  // seller_id
+        );
+        $wpdb->update($table_name, $data, $where, $format, $where_format);
 
-    // Check if the insert was successful
-    if ($wpdb->last_error) {
-        return $wpdb->last_error; // Return false if there was an error
+        // بررسی موفقیت عملیات بروزرسانی
+        if ($wpdb->last_error) {
+            return $wpdb->last_error; // بازگرداندن خطا در صورت وجود
+        } else {
+            return $wpdb->rows_affected; // بازگرداندن تعداد رکوردهای بروزرسانی شده
+        }
     } else {
-        return $wpdb->insert_id; // Return true if the insert was successful
+        // اگر اکشن insert بود، افزودن رکورد جدید
+        $wpdb->insert($table_name, $data, $format);
+
+        // بررسی موفقیت عملیات افزودن
+        if ($wpdb->last_error) {
+            return $wpdb->last_error; // بازگرداندن خطا در صورت وجود
+        } else {
+            return $wpdb->insert_id; // بازگرداندن ID رکورد افزوده شده
+        }
     }
 }
 function mv_template_part( $template ) {
@@ -285,5 +308,29 @@ function mv_get_seller_data($seller_id, $meta_field) {
 
 
         return false;
+    }
+}
+function update_product_status($mv_id, $new_status)
+{
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'mv_seller_products_data';
+
+    $data = array(
+        'status' => sanitize_text_field($new_status),
+    );
+
+    $where = array(
+        'mv_id' => intval($mv_id),
+    );
+
+    $updated = $wpdb->update($table_name, $data, $where);
+
+    if ($updated === false) {
+        return 'خطا در به‌روزرسانی وضعیت';
+    } elseif ($updated === 0) {
+        return 'هیچ رکوردی به‌روزرسانی نشد';
+    } else {
+        return 'وضعیت با موفقیت به‌روزرسانی شد';
     }
 }
