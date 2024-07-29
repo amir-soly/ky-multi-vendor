@@ -92,6 +92,11 @@
         }
     }
 }
-
-
-
+@layer utilities {
+    #aside-menu a.active{
+        @apply text-secondary;
+    }
+    #aside-menu a.active svg * {
+        @apply stroke-secondary;
+    }
+}
