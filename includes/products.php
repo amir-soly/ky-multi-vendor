@@ -28,7 +28,7 @@ if (isset($_GET['action']) && isset($_GET['mv_id'])) {
             $status = 'published';
             $sold_individually = isset($_POST['mv_sold_individually']) ? sanitize_text_field($_POST['mv_sold_individually']) : 'no';
             $action = $_GET['action'];
-            insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status , $action);
+            insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status, $action);
         }
 
 ?>
@@ -39,37 +39,37 @@ if (isset($_GET['action']) && isset($_GET['mv_id'])) {
             <input type="hidden" name="product_id" value="<?= $data['product_id']; ?>">
 
             <div class=" grid grid-cols-2 gap-4 mb-5">
-            <div>
-                <label for="mv_regular_price" class="text-secondary text-xs mb-2.5 block">قیمت محصول</label>
-                <input type="text" name="mv_regular_price" id="mv_regular_price" value="<?= $data['regular_price']; ?>" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
-            </div>
-            <div>
-                <div class="flex-cb text-xs mb-2.5">
-                    <label for="mv_sale_price" class="text-secondary">قیمت فروش ویژه محصول</label>
-                    <button type="button" id="toggle-sale-schedule" class="text-blue-600 underline">زمان بندی فروش</button>
+                <div>
+                    <label for="mv_regular_price" class="text-secondary text-xs mb-2.5 block">قیمت محصول</label>
+                    <input type="text" name="mv_regular_price" id="mv_regular_price" value="<?= $data['regular_price']; ?>" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
                 </div>
-                <input type="text" name="mv_sale_price" value="<?= $data['sale_price']; ?>" id="mv_sale_price" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
-            </div>
-            <div class="sale-date-fields hidden">
-                <label for="mv_from_sale_date" class="text-secondary text-xs mb-2.5 block">تاریخ شروع فروش ویژه</label>
-                <input type="text" name="mv_from_sale_date" value="<?= $data['from_sale_date']; ?>" id="mv_from_sale_date" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
-            </div>
-            <div class="sale-date-fields hidden">
-                <label for="mv_to_sale_date" class="text-secondary text-xs mb-2.5 block">تاریخ پایان فروش ویژه</label>
-                <input type="text" name="mv_to_sale_date" value="<?= $data['to_sale_date']; ?>" id="mv_to_sale_date" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
-            </div>
-            <div>
-                <label for="mv_stock" class="text-secondary text-xs mb-2.5 block">موجودی محصول</label>
-                <input type="text" name="mv_stock" id="mv_stock" value="<?= $data['stock']; ?>" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
-            </div>
-            <div>
-                <label for="mv_min_stock" class="text-secondary text-xs mb-2.5 block">حداقل موجودی محصول</label>
-                <input type="text" name="mv_min_stock" value="<?= $data['min_stock']; ?>" id="mv_min_stock" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
-            </div>
-            <div class="col-span-full flex-cc gap-2">
-                <label for="mv_sold_individually" class="text-secondary text-xs">تک فروشی محصول</label>
-                <input type="checkbox" name="mv_sold_individually" id="mv_sold_individually" value="yes">
-            </div>
+                <div>
+                    <div class="flex-cb text-xs mb-2.5">
+                        <label for="mv_sale_price" class="text-secondary">قیمت فروش ویژه محصول</label>
+                        <button type="button" id="toggle-sale-schedule" class="text-blue-600 underline">زمان بندی فروش</button>
+                    </div>
+                    <input type="text" name="mv_sale_price" value="<?= $data['sale_price']; ?>" id="mv_sale_price" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                </div>
+                <div class="sale-date-fields hidden">
+                    <label for="mv_from_sale_date" class="text-secondary text-xs mb-2.5 block">تاریخ شروع فروش ویژه</label>
+                    <input type="text" name="mv_from_sale_date" value="<?= $data['from_sale_date']; ?>" id="mv_from_sale_date" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                </div>
+                <div class="sale-date-fields hidden">
+                    <label for="mv_to_sale_date" class="text-secondary text-xs mb-2.5 block">تاریخ پایان فروش ویژه</label>
+                    <input type="text" name="mv_to_sale_date" value="<?= $data['to_sale_date']; ?>" id="mv_to_sale_date" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                </div>
+                <div>
+                    <label for="mv_stock" class="text-secondary text-xs mb-2.5 block">موجودی محصول</label>
+                    <input type="text" name="mv_stock" id="mv_stock" value="<?= $data['stock']; ?>" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                </div>
+                <div>
+                    <label for="mv_min_stock" class="text-secondary text-xs mb-2.5 block">حداقل موجودی محصول</label>
+                    <input type="text" name="mv_min_stock" value="<?= $data['min_stock']; ?>" id="mv_min_stock" class="border-lite-gray py-3 px-6 !rounded-2.5 w-full">
+                </div>
+                <div class="col-span-full flex-cc gap-2">
+                    <label for="mv_sold_individually" class="text-secondary text-xs">تک فروشی محصول</label>
+                    <input type="checkbox" name="mv_sold_individually" id="mv_sold_individually" value="yes">
+                </div>
             </div>
             <button type="submit" id="add_product_submit" product-id="" user-id="" class="!bg-primary !text-secondary block rounded-full py-3 font-bold w-full">ثبت محصول</button>
         </form>
@@ -93,7 +93,7 @@ if (isset($_GET['action']) && isset($_GET['mv_id'])) {
         }
     }
 }
-class doctors_List_Table extends WP_List_Table
+class MV_Products_List_Table extends WP_List_Table
 {
     // تعیین ستون‌های جدول
     function get_columns()
@@ -284,7 +284,7 @@ class doctors_List_Table extends WP_List_Table
 
 
     // تابع نمایش جدول
-    function show_doctors_table()
+    function show_products_table()
     {
 
         echo '<style>
@@ -375,7 +375,7 @@ table.wp-list-table span.wc-featured, table.wp-list-table span.wc-image {
         echo '</form>';
         echo '</div>';
 
-        $table = new doctors_List_Table();
+        $table = new MV_Products_List_Table();
         $table->prepare_items();
         $table->views();
         echo '<form method="post">';
@@ -385,6 +385,6 @@ table.wp-list-table span.wc-featured, table.wp-list-table span.wc-image {
     }
 }
 
-$table = new doctors_List_Table();
+$table = new MV_Products_List_Table();
 
-$table->show_doctors_table();
+$table->show_products_table();
