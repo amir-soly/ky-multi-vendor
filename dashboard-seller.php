@@ -28,7 +28,9 @@ $profile_image = 0;
             <div class="container my-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-3">
-     
+                        <?php
+                        include MV_DIR_PATH . '/templates/client/aside-menu.php';
+                        ?>     
                     </div>
                     <div class="lg:col-span-9 h-fit">
                         <?php
