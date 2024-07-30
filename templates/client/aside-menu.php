@@ -25,7 +25,7 @@ $user = wp_get_current_user();
             </a>
         </li>
         <li>
-            <a href="<?php echo esc_attr(home_url('dashboard-seller/')); ?>" class="flex items-center gap-4 py-2 <?php echo is_dashboard_seller_endpoint('')? 'active': ''; ?>">
+            <a href="<?php echo esc_attr(home_url('dashboard-seller/address')); ?>" class="flex items-center gap-4 py-2 <?php echo is_dashboard_seller_endpoint('address')? 'active': ''; ?>">
                 <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none"><path d="M6.93923 4.99436C9.69754 2.23605 14.207 2.27343 16.9653 5.03174V5.03174C19.2726 7.33902 19.7567 10.9441 18.1003 13.7554L12.0645 24L5.86702 13.6059C4.21094 10.8284 4.65262 7.28097 6.93923 4.99436V4.99436Z" stroke="#B3B3B3"/><circle cx="11.9363" cy="10.3768" r="3.2918" stroke="#B3B3B3"/></svg></span>
                 <span class="font-bold">آدرس ها</span>
             </a>
