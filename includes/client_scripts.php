@@ -12,12 +12,61 @@ function enqueue_scripts_head() {
                     background-position: center;
                     background-repeat: no-repeat;
                 }
+            <?php } elseif (is_dashboard_seller_endpoint('address')) { ?> 
+                .tab-active {
+                    border:1px solid #e5e7eb;
+                    box-shadow: 0 3px 0px 0px white;
+                }
+                .switch {
+                  position: relative;
+                  display: inline-block;
+                  width: 40px;
+                  height: 20px;
+                }
+                .switch input { 
+                  opacity: 0;
+                  width: 0;
+                  height: 0;
+                }
+                .slider {
+                  position: absolute;
+                  cursor: pointer;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background-color: #ccc;
+                  -webkit-transition: .4s;
+                  transition: .4s;
+                  border-radius: 34px;
+                }
+                .slider:before {
+                  position: absolute;
+                  content: "";
+                  height: 18px;
+                  width: 18px;
+                  top:1px;
+                  left: 1px;
+                  background-color: white;
+                  -webkit-transition: .4s;
+                  transition: .4s;
+                  border-radius: 50%;
+                }
+                .switch input:checked + .slider {
+                  background-color: #39B54A;
+                }
+                .switch input:checked + .slider:before {
+                  -webkit-transform: translateX(20px);
+                  -ms-transform: translateX(20px);
+                  transform: translateX(20px);
+                }
             <?php }
             ?>
         </style>
     <?php }
 }
 add_action('wp_head', 'enqueue_scripts_head');
+
 
 // enqueue scripts file to client page
 function enqueue_scripts() {
