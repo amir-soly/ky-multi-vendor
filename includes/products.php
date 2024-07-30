@@ -1,11 +1,7 @@
 <?php
 global $wpdb;
 
-
-
-
 if (isset($_GET['action']) && isset($_GET['mv_id'])) {
-
     if ($_GET['action'] == 'edit') {
         $mv_id = $_GET['mv_id'];
         $table_name = $wpdb->prefix . 'mv_seller_products_data'; // نام جدول پیشفرض وردپرس
@@ -31,7 +27,7 @@ if (isset($_GET['action']) && isset($_GET['mv_id'])) {
             insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status, $action);
         }
 
-?>
+        ?>
         <form id="add_product_form" method="POST">
             <input type="hidden" name="mv_edit_panel_product">
             <input type="hidden" name="seller_id" value="<?= $data['seller_id']; ?>">
@@ -73,7 +69,7 @@ if (isset($_GET['action']) && isset($_GET['mv_id'])) {
             </div>
             <button type="submit" id="add_product_submit" product-id="" user-id="" class="!bg-primary !text-secondary block rounded-full py-3 font-bold w-full">ثبت محصول</button>
         </form>
-    <?php
+        <?php
         return;
     } else {
         $action = $_GET['action'];
@@ -100,7 +96,7 @@ class MV_Products_List_Table extends WP_List_Table
     {
         $columns = array(
             'cb' => '<input type="checkbox" />',
-            'thumb' => '<span class="wc-image tips">تصویر</span>',
+            'thumb' => '',
             'seller' => 'فروشنده',
             'product_name' => 'عنوان محصول',
             'sku' => 'شناسه',
@@ -286,50 +282,6 @@ class MV_Products_List_Table extends WP_List_Table
     // تابع نمایش جدول
     function show_products_table()
     {
-
-        echo '<style>
-        mark.instock {    
-    font-weight: 700;
-    background: transparent none;
-    line-height: 1;
-     color: #7ad03a;}
-        span.wc-image.tips::before {
-    font-family: Dashicons;
-    font-weight: 400;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    margin: 0;
-    text-indent: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    content: "\f128";
-}
-
-
-
-th.manage-column.column-thumb.column-primary {
-    width: 52px;
-    text-align: center;
-    white-space: nowrap;
-
-}
-
-
-table.wp-list-table span.wc-featured, table.wp-list-table span.wc-image {
-    display: block;
-    text-indent: -9999px;
-    position: relative;
-    height: 1em;
-    width: 1em;
-    margin: 0 auto;
-}</style>';
-
         echo '<div class="wrap">';
         echo '<h1 class="wp-heading-inline">لیست محصولات فروشندگان</h1>';
         echo '<div class="content-action">';
@@ -348,31 +300,29 @@ table.wp-list-table span.wc-featured, table.wp-list-table span.wc-image {
         echo '<li><a href="admin.php?page=mv-products&tab=rejected" class="' . $rejected_class . '">رد شده</a></li>';
         echo '</ul>';
 
+        echo '<div class="forms">';
+        echo '<form method="POST" action="">';
+        echo '<select id="filter" name="filter">';
+        echo '<option value="">بر اساس</option>';
+        echo '<option value="newest" ' . selected(isset($_POST['filter']) && $_POST['filter'] == 'newest', true, false) . '>جدیدترین</option>';
+        echo '<option value="expensive" ' . selected(isset($_POST['filter']) && $_POST['filter'] == 'expensive', true, false) . '>گرانترین</option>';
+        echo '<option value="cheapest" ' . selected(isset($_POST['filter']) && $_POST['filter'] == 'cheapest', true, false) . '>ارزانترین</option>';
+        echo '</select>';
+        echo '<input type="submit" class="button" value="جست و جو">';
+        echo '</form>';
+
+        echo '<form method="get" id="search-box">';
+        echo '<input type="hidden" name="page" value="' . $_REQUEST['page'] . '">';
+        echo '<input type="text" name="s" value="' . (isset($_REQUEST['s']) ? esc_attr($_REQUEST['s']) : '') . '" placeholder="شماره موبایل">';
+        echo '<input type="submit" name="" id="search-submit" class="button" value="جست و جو">';
+        echo '</form>';
+        echo '</div>';
+
         // echo '<form method="get" id="search-box">';
         // echo '<input type="hidden" name="page" value="' . $_REQUEST['page'] . '"/>';
         // echo 'جست و جو بر اساس نام محصول: <input type="text" name="s" value="' . (isset($_REQUEST['s']) ? esc_attr($_REQUEST['s']) : '') . '"/>';
         // echo '<input type="submit" name="" id="search-submit" class="button" value="جست و جو">';
         // echo '</form>';
-
-    ?>
-        <form method="POST" action="">
-            <label for="filter">فیلتر بر اساس:</label>
-            <select id="filter" name="filter">
-                <option value="newest" <?php selected(isset($_POST['filter']) && $_POST['filter'] == 'newest'); ?>>جدیدترین</option>
-                <option value="expensive" <?php selected(isset($_POST['filter']) && $_POST['filter'] == 'expensive'); ?>>گرانترین</option>
-                <option value="cheapest" <?php selected(isset($_POST['filter']) && $_POST['filter'] == 'cheapest'); ?>>ارزانترین</option>
-            </select>
-            <button type="submit">جستجو</button>
-        </form>
-
-
-
-<?php
-        echo '<form method="get" id="search-box">';
-        echo '<input type="hidden" name="page" value="' . $_REQUEST['page'] . '"/>';
-        echo 'جست و جو بر اساس شماره موبایل: <input type="text" name="s" value="' . (isset($_REQUEST['s']) ? esc_attr($_REQUEST['s']) : '') . '"/>';
-        echo '<input type="submit" name="" id="search-submit" class="button" value="جست و جو">';
-        echo '</form>';
         echo '</div>';
 
         $table = new MV_Products_List_Table();
