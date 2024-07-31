@@ -216,30 +216,6 @@ function mv_get_store_data($seller_id, $meta_field) {
     if (isset($store_data[$meta_field]) && !empty($store_data[$meta_field])) {
         return esc_html($store_data[$meta_field]);
     } else {
-        // switch ($meta_field) {
-        //     case 'seller_status':
-        //         $not_set_message = 'وضعیت';
-        //         break;
-        //     case 'store_bio':
-        //         $not_set_message = 'درباره ما';
-        //         break;
-        //     case 'store_name':
-        //         $not_set_message = 'فروشگاه';
-        //         break;
-        //     case 'store_phone':
-        //         $not_set_message = 'شماره تماس';
-        //         break;
-        //     case 'store_site':
-        //         $not_set_message = 'وبسایت';
-        //         break;
-        //     case 'store_vacation':
-        //         $not_set_message = 'تعطیلات';
-        //         break;
-            
-        // }
-        // echo  esc_html($not_set_message) ;
-
-
         return false;
     }
 }
@@ -283,30 +259,6 @@ function mv_get_seller_data($seller_id, $meta_field) {
     if (isset($seller_data[$meta_field]) && !empty($seller_data[$meta_field])) {
         return esc_html($seller_data[$meta_field]);
     } else {
-        // switch ($meta_field) {
-        //     case 'seller_status':
-        //         $not_set_message = 'وضعیت';
-        //         break;
-        //     case 'store_bio':
-        //         $not_set_message = 'درباره ما';
-        //         break;
-        //     case 'store_name':
-        //         $not_set_message = 'فروشگاه';
-        //         break;
-        //     case 'store_phone':
-        //         $not_set_message = 'شماره تماس';
-        //         break;
-        //     case 'store_site':
-        //         $not_set_message = 'وبسایت';
-        //         break;
-        //     case 'store_vacation':
-        //         $not_set_message = 'تعطیلات';
-        //         break;
-            
-        // }
-        // echo  esc_html($not_set_message) ;
-
-
         return false;
     }
 }
@@ -332,5 +284,57 @@ function update_product_status($mv_id, $new_status)
         return 'هیچ رکوردی به‌روزرسانی نشد';
     } else {
         return 'وضعیت با موفقیت به‌روزرسانی شد';
+    }
+}
+
+function mv_seller_document_meta($seller_id, $document, $meta_field , $status) {
+
+    $seller_id = intval($seller_id);
+    
+    $document = sanitize_text_field($document);
+    $meta_field = sanitize_text_field($meta_field);
+    
+    $valid_meta_fields = array('business_license_img', 'national_card_img', 'birth_certificate_img');
+    if (!in_array($meta_field, $valid_meta_fields)) {
+        return;
+    }
+    
+    $current_document = get_user_meta($seller_id, 'mv_seller_document', true);
+    
+    if (!is_array($current_document)) {
+        $current_document = array();
+    }
+
+    $current_document[$meta_field] =array(
+        'url'=> $document ,
+        'status' => $status,
+    );
+
+    $data_check = update_user_meta($seller_id, 'mv_seller_document', $current_document);
+    return $data_check;
+
+}
+
+
+
+function mv_get_seller_document_meta($seller_id, $meta_field , $data) {
+    $seller_id = intval($seller_id);
+
+    $meta_field = sanitize_text_field($meta_field);
+
+    $valid_meta_fields = array('business_license_img', 'national_card_img', 'birth_certificate_img');
+    
+ 
+
+    $document_meta = get_user_meta($seller_id, 'mv_seller_document', true);
+
+    if (!is_array($document_meta)) {
+        $document_meta = array();
+    }
+
+    if (isset($document_meta[$meta_field]) && !empty($document_meta[$meta_field])) {
+        return esc_html($document_meta[$meta_field][$data]);
+    } else {
+        return false;
     }
 }

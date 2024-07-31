@@ -72,7 +72,8 @@ function mv_add_product()
 }
 add_action('wp_ajax_search_products', 'handle_search_products');
 add_action('wp_ajax_nopriv_search_products', 'handle_search_products');
-function handle_search_products() {
+function handle_search_products()
+{
     global $wpdb;
 
     // sanitize input values
@@ -121,7 +122,7 @@ function handle_search_products() {
             $matched_products = array_intersect($mainIDs, $seller_product_ids);
 
             if ($matched_products) {
-                $products = array_map(function($product_id) use ($seller_product_ids) {
+                $products = array_map(function ($product_id) use ($seller_product_ids) {
                     return array(
                         'seller_id' => get_current_user_id(),
                         'product_id' => $product_id,
@@ -150,10 +151,10 @@ function handle_search_products() {
 
             $seller_product_ids = array_column($result, 'product_id');
 
-            $products = array_map(function($product) use ($seller_product_ids) {
+            $products = array_map(function ($product) use ($seller_product_ids) {
                 $product_id = $product->ID;
                 $wc_product = wc_get_product($product_id);
-                
+
                 return array(
                     'seller_id' => get_current_user_id(),
                     'product_id' => $product_id,
@@ -163,7 +164,7 @@ function handle_search_products() {
                     'terms' => wc_get_product_category_list($product_id),
                     'exists' => in_array($product_id, $seller_product_ids) ? 'true' : 'false',
                     'sku' => $wc_product->get_sku(),
-                );                
+                );
             }, $search_results);
 
             wp_send_json_success(array('products' => $products));
@@ -176,7 +177,8 @@ function handle_search_products() {
 }
 add_action('wp_ajax_submit_store_status', 'handle_submit_store_status');
 add_action('wp_ajax_nopriv_submit_store_status', 'handle_submit_store_status');
-function handle_submit_store_status() {
+function handle_submit_store_status()
+{
 
     parse_str($_POST['form_data'], $form_data);
 
@@ -192,22 +194,23 @@ function handle_submit_store_status() {
 
 
     $data_check = mv_seller_store_info_meta($seller_id, $store_data, $meta_field);
-    if($data_check){
+    if ($data_check) {
         wp_send_json_success(array(
             'message' => 'store mv_store_data added successfully',
         ));
-    }else{
+    } else {
         wp_send_json_error(array(
             'message' => 'there is an error while adding',
         ));
     }
-    
+
 
     wp_die();
 }
 add_action('wp_ajax_mv_get_template_part', 'mv_get_template_part');
 add_action('wp_ajax_nopriv_mv_get_template_part', 'mv_get_template_part');
-function mv_get_template_part() {
+function mv_get_template_part()
+{
     $template = sanitize_text_field($_POST['template']);
 
     ob_start();
@@ -219,7 +222,8 @@ function mv_get_template_part() {
 }
 add_action('wp_ajax_submit_seller_status', 'handle_submit_seller_status');
 add_action('wp_ajax_nopriv_submit_seller_status', 'handle_submit_seller_status');
-function handle_submit_seller_status() {
+function handle_submit_seller_status()
+{
 
     parse_str($_POST['form_data'], $form_data);
 
@@ -238,7 +242,7 @@ function handle_submit_seller_status() {
     }
 
 
-    if($meta_field == 'seller_first_name,seller_last_name' ){
+    if ($meta_field == 'seller_first_name,seller_last_name') {
 
         $seller_data1 = isset($form_data['seller_data1']) ? sanitize_text_field($form_data['seller_data1']) : '';
         $meta_data = array(
@@ -247,41 +251,90 @@ function handle_submit_seller_status() {
         );
         $meta_fields = explode(',', $meta_field);
 
-            $index = 0;
-            foreach ($meta_fields as $meta_field) {
-                $data_value = isset($meta_data['field' . ($index + 1)]) ? $meta_data['field' . ($index + 1)] : '';
-                $data_check = mv_seller_info_meta($seller_id, $data_value, $meta_field);
+        $index = 0;
+        foreach ($meta_fields as $meta_field) {
+            $data_value = isset($meta_data['field' . ($index + 1)]) ? $meta_data['field' . ($index + 1)] : '';
+            $data_check = mv_seller_info_meta($seller_id, $data_value, $meta_field);
 
-                $index++;
+            $index++;
+        }
 
-            }
-        
-            if($data_check){
-                wp_send_json_success(array(
-                    'message' => 'store mv_store_data added successfully',
-                ));
-            }else{
-                wp_send_json_error(array(
-                    'message' => 'there is an error while adding',
-                ));
-            }
-    }else{
-
-        $data_check = mv_seller_info_meta($seller_id, $seller_data, $meta_field);
-        if($data_check){
+        if ($data_check) {
             wp_send_json_success(array(
                 'message' => 'store mv_store_data added successfully',
             ));
-        }else{
+        } else {
             wp_send_json_error(array(
                 'message' => 'there is an error while adding',
             ));
         }
+    } else {
 
+        $data_check = mv_seller_info_meta($seller_id, $seller_data, $meta_field);
+        if ($data_check) {
+            wp_send_json_success(array(
+                'message' => 'store mv_store_data added successfully',
+            ));
+        } else {
+            wp_send_json_error(array(
+                'message' => 'there is an error while adding',
+            ));
+        }
     }
 
 
-    
 
+
+    wp_die();
+}
+
+add_action('wp_ajax_upload_document', 'handle_upload_document');
+add_action('wp_ajax_nopriv_upload_document', 'handle_upload_document');
+function handle_upload_document()
+{
+
+    function log_message($message) {
+        $existing_log = get_transient('n_custom_log') ?: '';
+        $new_log = $existing_log . date('[Y-m-d H:i:s] ') . $message . "\n";
+        set_transient('n_custom_log', $new_log, 3600);
+    }
+    $seller_id = get_current_user_id();
+
+    $meta_field = isset($_POST['meta_field']) ? sanitize_text_field($_POST['meta_field']) : '';
+    $user = get_userdata($seller_id);
+
+    $document = isset($_FILES['document']) ? sanitize_text_field($_FILES['document']) : '';
+
+    if (!$user && !in_array('mv_seller', $user->roles)) {
+        wp_send_json_error(array(
+            'message' => 'User does not exist or is not seller',
+        ));
+    }
+    if (empty($_FILES['document'])) {
+        wp_send_json_error(array(
+            'message' => 'No document uploaded',
+        ));
+    }
+
+    // تنظیمات آپلود
+    $upload = wp_handle_upload($_FILES['document'], array('test_form' => false));
+    if (isset($upload['error'])) {
+        wp_send_json_error(array(
+            'message' => $upload['error'],
+        ));
+    }
+
+    $status = 'pending';
+    $data_check = mv_seller_document_meta($seller_id, $upload['url'], $meta_field , $status);
+    
+    if($data_check){
+        wp_send_json_success(array(
+            'message' => 'store mv_seller_document added successfully',
+        ));
+    }else{
+        wp_send_json_error(array(
+            'message' => 'there is an error while adding',
+        ));
+    }
     wp_die();
 }

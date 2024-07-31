@@ -1,3 +1,4 @@
+import {customMessage} from './functions.js?v=1.0.0';
 jQuery(document).ready(function($) {
     // open Modal
     $(document).on('click', '.open-modal', function() {
@@ -6,7 +7,7 @@ jQuery(document).ready(function($) {
         
         // set the modal title and form ID
         $('#title-modal-documents').text(dataTitle + ' را وارد کنید');
-        $('#meta_filed').val(formId);
+        $('#meta_field').val(formId);
         
         // show modal and overlay
         $('#modal-documents, #overlay-modal-documents').removeClass('opacity-0 invisible');
@@ -20,7 +21,7 @@ jQuery(document).ready(function($) {
         // reset the image button and hidden input field
         $('.image-button').css('background-image', 'none');
         $('.image-button span').removeClass('opacity-0');
-        $('#meta_filed').val('');
+        $('#meta_field').val('');
     });
 
     // handle file input and preview
@@ -32,7 +33,6 @@ jQuery(document).ready(function($) {
     $(document).on('change', '#document', function(e) {
         e.preventDefault();
 
-        const fileInput = $(this);
         const file = e.target.files[0];
 
         if (file) {
@@ -45,13 +45,73 @@ jQuery(document).ready(function($) {
             };
 
             reader.readAsDataURL(file);
-
-            // hide the file input after selection
-            fileInput.val('');
         }
     });
 
-    $('#documents_form').submit(function(e){
+    $(document).on('submit','#documents_form', function(e){
         e.preventDefault();
+    
+        // get the file input
+        const fileInput = $('#document')[0].files[0];
+        const metaField = $('#meta_field').val();
+        if (!fileInput) {
+            alert('خالیه');
+            return;
+        }
+    
+        let formData = new FormData();
+        formData.append('document', fileInput);
+        formData.append('meta_field', metaField);
+        formData.append('action', 'upload_document');
+
+        let submitButton = $(this).find('button[type="submit"]');
+        submitButton.prop('disabled', true).html('<svg class="animate-spin mx-auto" xmlns="http://www.w3.org/2000/svg" width="21px" height="21px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"></path> </g></svg>');
+        $.ajax({
+            url: stm_wpcfto_ajaxurl,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+            },
+            success: function(response) {
+                submitButton.prop('disabled', false).html('تایید');
+
+                if (response.success) {
+                    $('#modal-documents, #overlay-modal-documents').addClass('opacity-0 invisible');
+                    $('#loader').removeClass('opacity-0 invisible');
+                    loadTemplate();
+                    
+                    customMessage('اطلاعات با موفقیت ثبت شد.', 'success');
+                }
+                console.log(response.success);
+            },
+            error: function(error) {
+                submitButton.prop('disabled', false).html('تایید');
+                customMessage('مشکلی پیش آمده دوباره امتحان کنید.', 'error');
+                
+                console.error('Error in form submission', error);
+            }
+        });
     });
+
+
+    function loadTemplate() {
+        $.ajax({
+            url: stm_wpcfto_ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'mv_get_template_part',
+                template: 'client/profile-fields/documents'
+            },
+            success: function(html) {
+                $('#container-fields').html(html);
+                $('#loader').addClass('opacity-0 invisible');
+            },
+            error: function(error) {
+                console.error('Error in loading template', error);
+                $('#loader').addClass('opacity-0 invisible');
+            }
+        });
+    };
 });
