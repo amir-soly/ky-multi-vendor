@@ -7,59 +7,9 @@ function enqueue_scripts_head() {
         <style>
             <?php
             if (is_dashboard_seller_endpoint('documents')) { ?> 
-                .image-button {
-                    background-size: cover;
-                    background-position: center;
-                    background-repeat: no-repeat;
-                }
+                .image-button{background-size:cover;background-position:center;background-repeat:no-repeat}
             <?php } elseif (is_dashboard_seller_endpoint('address')) { ?> 
-                .tab-active {
-                    border:1px solid #e5e7eb;
-                    box-shadow: 0 3px 0px 0px white;
-                }
-                .switch {
-                  position: relative;
-                  display: inline-block;
-                  width: 40px;
-                  height: 20px;
-                }
-                .switch input { 
-                  opacity: 0;
-                  width: 0;
-                  height: 0;
-                }
-                .slider {
-                  position: absolute;
-                  cursor: pointer;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: 0;
-                  background-color: #ccc;
-                  -webkit-transition: .4s;
-                  transition: .4s;
-                  border-radius: 34px;
-                }
-                .slider:before {
-                  position: absolute;
-                  content: "";
-                  height: 18px;
-                  width: 18px;
-                  top:1px;
-                  left: 1px;
-                  background-color: white;
-                  -webkit-transition: .4s;
-                  transition: .4s;
-                  border-radius: 50%;
-                }
-                .switch input:checked + .slider {
-                  background-color: #39B54A;
-                }
-                .switch input:checked + .slider:before {
-                  -webkit-transform: translateX(20px);
-                  -ms-transform: translateX(20px);
-                  transform: translateX(20px);
-                }
+                .tab-active{border:1px solid #e5e7eb;box-shadow:0 3px 0 0 #fff}.switch{position:relative;display:inline-block;width:40px;height:20px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;-webkit-transition:.4s;transition:.4s;border-radius:34px}.slider:before{position:absolute;content:"";height:18px;width:18px;top:1px;left:1px;background-color:#fff;-webkit-transition:.4s;transition:.4s;border-radius:50%}.switch input:checked+.slider{background-color:#39b54a}.switch input:checked+.slider:before{-webkit-transform:translateX(20px);-ms-transform:translateX(20px);transform:translateX(20px)}
             <?php }
             ?>
         </style>
@@ -80,6 +30,7 @@ function enqueue_scripts() {
     wp_register_script('seller-info', MV_DIR_URL . 'assets/client/js/seller-info.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/seller-info.js'), true);
     wp_register_script('accounting-info', MV_DIR_URL . 'assets/client/js/accounting-info.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/accounting-info.js'), true);
     wp_register_script('documents', MV_DIR_URL . 'assets/client/js/documents.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/documents.js'), true);
+    wp_register_script('address', MV_DIR_URL . 'assets/client/js/address.js', array('jquery'), filemtime(MV_DIR_PATH . 'assets/client/js/address.js'), true);
 
     if (is_page_template('dashboard-seller.php')) {
         wp_enqueue_style('output-tailwind');
@@ -96,6 +47,8 @@ function enqueue_scripts() {
             wp_enqueue_script('accounting-info');
         } elseif (is_dashboard_seller_endpoint('documents')) {
             wp_enqueue_script('documents');
+        } elseif (is_dashboard_seller_endpoint('address')) {
+            wp_enqueue_script('address');
         }
     }
 }
