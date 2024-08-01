@@ -229,7 +229,7 @@ function mv_seller_info_meta($seller_id, $seller_data, $meta_field)
     $seller_data = sanitize_text_field($seller_data);
     $meta_field = sanitize_text_field($meta_field);
 
-    $valid_meta_fields = array('seller_email', 'seller_phone', 'seller_national_code', 'seller_last_name', 'seller_first_name');
+    $valid_meta_fields = array('seller_email', 'seller_phone', 'seller_national_code', 'seller_last_name', 'seller_first_name','seller_birthday');
     if (!in_array($meta_field, $valid_meta_fields)) {
         return;
     }
@@ -392,5 +392,50 @@ function reduce_stock_and_record_total($status, $order_id)
         }
 
         update_user_meta($seller_id, 'seller_wallet_total', $total);
+    }
+}
+
+function mv_seller_accounting_meta($seller_id, $seller_data, $meta_field)
+{
+    $seller_id = intval($seller_id);
+
+    $seller_data = sanitize_text_field($seller_data);
+    $meta_field = sanitize_text_field($meta_field);
+
+    $valid_meta_fields = array('seller_accounting_card_number', 'seller_vat_exempt','seller_accounting_iban');
+    if (!in_array($meta_field, $valid_meta_fields)) {
+        return;
+    }
+
+    $current_seller_data = get_user_meta($seller_id, 'mv_seller_accounting_data', true);
+
+    if (!is_array($current_seller_data)) {
+        $current_seller_data = array();
+    }
+
+    $current_seller_data[$meta_field] = $seller_data;
+
+    $data_check = update_user_meta($seller_id, 'mv_seller_accounting_data', $current_seller_data);
+    return $data_check;
+}
+function mv_get_seller_accounting_data($seller_id, $meta_field)
+{
+    $seller_id = intval($seller_id);
+
+    $meta_field = sanitize_text_field($meta_field);
+
+    $valid_meta_fields = array('seller_accounting_card_number', 'seller_vat_exempt','seller_accounting_iban');
+
+
+    $seller_data = get_user_meta($seller_id, 'mv_seller_accounting_data', true);
+
+    if (!is_array($seller_data)) {
+        $seller_data = array();
+    }
+
+    if (isset($seller_data[$meta_field]) && !empty($seller_data[$meta_field])) {
+        return esc_html($seller_data[$meta_field]);
+    } else {
+        return false;
     }
 }

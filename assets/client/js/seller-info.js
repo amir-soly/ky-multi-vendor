@@ -25,7 +25,7 @@ jQuery(document).ready(function($) {
         $('#modal-seller-info, #overlay-modal-seller-info').addClass('opacity-0 invisible');
     });
 
-    $(document).on('submit', '#seller_email_form, #seller_phone_number_form, #seller_national_code_form, #seller_name_form', function(e) {
+    $(document).on('submit', '#seller_email_form, #seller_phone_number_form, #seller_national_code_form,#seller_identity_form', function(e) {
         e.preventDefault();
 
         let formData = $(this).serialize();

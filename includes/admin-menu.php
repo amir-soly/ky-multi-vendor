@@ -9,6 +9,14 @@ function mv_admin_panel_menu() {
         'dashicons-admin-tools',
         20
     );
+    add_submenu_page(
+        'mv-management',
+        'فروشندگان',
+        'فروشندگان',
+        'manage_options',
+        'mv-sellers',
+        'mv_sellers'
+    );
 
     add_submenu_page(
         'mv-management',
@@ -25,7 +33,9 @@ function mv_management() {
 
 }
 
+function mv_sellers() {
+    require __DIR__ . '/sellers.php';
+}
 function mv_products() {
     require __DIR__ . '/products.php';
-
 }
