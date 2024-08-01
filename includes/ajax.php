@@ -224,66 +224,100 @@ add_action('wp_ajax_submit_seller_status', 'handle_submit_seller_status');
 add_action('wp_ajax_nopriv_submit_seller_status', 'handle_submit_seller_status');
 function handle_submit_seller_status()
 {
-
     parse_str($_POST['form_data'], $form_data);
 
-    $seller_id = isset($form_data['seller_id']) ? intval($form_data['seller_id']) : 0;
+    $seller_id = get_current_user_id();
     $seller_data = isset($form_data['seller_data']) ? sanitize_text_field($form_data['seller_data']) : '';
-
     $meta_field = isset($form_data['meta_field']) ? sanitize_text_field($form_data['meta_field']) : '';
+
+
+
     $user = get_userdata($seller_id);
 
 
-
-    if (!$user && !in_array('mv_seller', $user->roles)) {
+    if (!$user || in_array('mv_seller', (array) $user->roles)) {
         wp_send_json_error(array(
-            'message' => 'User does not exist or is not seller',
+            'message' => 'User does not exist or is not a seller',
         ));
+        wp_die();
     }
 
+    if ($meta_field == 'seller_first_name,seller_last_name,seller_national_code,seller_birthday') {
 
-    if ($meta_field == 'seller_first_name,seller_last_name') {
+        $seller_first_name = isset($form_data['seller_first_name']) ? sanitize_text_field($form_data['seller_first_name']) : '';
+        $seller_last_name = isset($form_data['seller_last_name']) ? sanitize_text_field($form_data['seller_last_name']) : '';
+        $seller_national_code = isset($form_data['seller_national_code']) ? sanitize_text_field($form_data['seller_national_code']) : '';
+        $birthday_day = isset($form_data['birthday_day']) ? sanitize_text_field($form_data['birthday_day']) : 0;
+        $birthday_month = isset($form_data['birthday_month']) ? sanitize_text_field($form_data['birthday_month']) : 0;
+        $birthday_year = isset($form_data['birthday_year']) ? sanitize_text_field($form_data['birthday_year']) : 0;
+        $birth_day = $birthday_year . '/' . $birthday_month . '/' . $birthday_day;
+        $date_parts = explode('/', $birth_day);
+        $birthDate = sprintf('%04d', $date_parts[0]) . sprintf('%02d', $date_parts[1]) . sprintf('%02d', $date_parts[2]);
+        $seller_full_name = $seller_first_name . $seller_last_name;
+        $response = wp_remote_post('https://napi.jibit.ir/ide/v1/tokens/generate', [
+            'method' => 'POST',
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => json_encode(['apiKey' => '0ihLRsW7aT', 'secretKey' => '0rULZljifAQcI1RnSzpCb3QLq']),
+        ]);
 
-        $seller_data1 = isset($form_data['seller_data1']) ? sanitize_text_field($form_data['seller_data1']) : '';
-        $meta_data = array(
-            'field1' =>  $seller_data,
-            'field2' =>  $seller_data1,
-        );
-        $meta_fields = explode(',', $meta_field);
-
-        $index = 0;
-        foreach ($meta_fields as $meta_field) {
-            $data_value = isset($meta_data['field' . ($index + 1)]) ? $meta_data['field' . ($index + 1)] : '';
-            $data_check = mv_seller_info_meta($seller_id, $data_value, $meta_field);
-
-            $index++;
-        }
-
-        if ($data_check) {
-            wp_send_json_success(array(
-                'message' => 'store mv_store_data added successfully',
+        if (is_wp_error($response)) {
+            wp_send_json_error(array(
+                'message' => 'در حال حاضر امکان استعلام وجود ندارد',
             ));
         } else {
-            wp_send_json_error(array(
-                'message' => 'there is an error while adding',
-            ));
+            $result = json_decode(wp_remote_retrieve_body($response), true);
+            if (!isset($result['accessToken'], $result['refreshToken'])) {
+                wp_send_json_error(array(
+                    'message' => 'در حال حاضر امکان استعلام وجود ندارد',
+                ));
+            }
+
+            $accessToken = $result['accessToken'];
+            $refreshToken = $result['refreshToken'];
+
+            $name_code_similarity = wp_remote_get("https://napi.jibit.ir/ide/v1/services/identity/similarity?nationalCode={$seller_national_code}&birthDate={$birthDate}&fullName={$seller_full_name}", [
+                'headers' => ['Authorization' => "Bearer {$accessToken}", 'Content-Type' => 'application/json'],
+            ]);
+
+
+            $result_cards = json_decode(wp_remote_retrieve_body($name_code_similarity), true);
+            if (isset($result_cards['message']) && isset($result_cards['code'])) {
+                $error_message = isset($result_cards['message']) ? $result_cards['message'] : 'خطای نامشخص در پاسخ سرور';
+                wp_send_json_error(
+                    array(
+                        'message' => $error_message,
+                    )
+                );
+            } else {
+                $data_check_first_name = mv_seller_info_meta($seller_id, $seller_first_name, 'seller_first_name');
+                $data_check_last_name = mv_seller_info_meta($seller_id, $seller_last_name, 'seller_last_name');
+                $data_check_national_code = mv_seller_info_meta($seller_id, $seller_national_code, 'seller_national_code');
+                $data_check_birthday = mv_seller_info_meta($seller_id, $birth_day, 'seller_birthday');
+
+                if ($data_check_first_name && $data_check_last_name && $data_check_national_code && $data_check_birthday) {
+                    wp_send_json_success(array(
+                        'message' => 'Seller data updated successfully',
+                    ));
+                } else {
+                    wp_send_json_error(array(
+                        'message' => 'Error updating seller data',
+                    ));
+                }
+            }
         }
     } else {
-
         $data_check = mv_seller_info_meta($seller_id, $seller_data, $meta_field);
+
         if ($data_check) {
             wp_send_json_success(array(
-                'message' => 'store mv_store_data added successfully',
+                'message' => 'Seller data updated successfully',
             ));
         } else {
             wp_send_json_error(array(
-                'message' => 'there is an error while adding',
+                'message' => 'Error updating seller data',
             ));
         }
     }
-
-
-
 
     wp_die();
 }
@@ -293,11 +327,6 @@ add_action('wp_ajax_nopriv_upload_document', 'handle_upload_document');
 function handle_upload_document()
 {
 
-    function log_message($message) {
-        $existing_log = get_transient('n_custom_log') ?: '';
-        $new_log = $existing_log . date('[Y-m-d H:i:s] ') . $message . "\n";
-        set_transient('n_custom_log', $new_log, 3600);
-    }
     $seller_id = get_current_user_id();
 
     $meta_field = isset($_POST['meta_field']) ? sanitize_text_field($_POST['meta_field']) : '';
@@ -325,16 +354,119 @@ function handle_upload_document()
     }
 
     $status = 'pending';
-    $data_check = mv_seller_document_meta($seller_id, $upload['url'], $meta_field , $status);
-    
-    if($data_check){
+    $data_check = mv_seller_document_meta($seller_id, $upload['url'], $meta_field, $status);
+
+    if ($data_check) {
         wp_send_json_success(array(
             'message' => 'store mv_seller_document added successfully',
         ));
-    }else{
+    } else {
         wp_send_json_error(array(
             'message' => 'there is an error while adding',
         ));
     }
     wp_die();
+}
+
+add_action('wp_ajax_submit_seller_accounting', 'handle_submit_seller_accounting');
+add_action('wp_ajax_nopriv_submit_seller_accounting', 'handle_submit_seller_accounting');
+function handle_submit_seller_accounting() {
+    parse_str($_POST['form_data'], $form_data);
+    $seller_id = get_current_user_id();
+    $seller_accounting_card_number = isset($form_data['seller_accounting_card_number']) ? sanitize_text_field($form_data['seller_accounting_card_number']) : '';
+    $seller_vat_exempt = isset($form_data['seller_vat_exempt']) ? sanitize_text_field($form_data['seller_vat_exempt']) : '';
+
+    $meta_field = isset($form_data['meta_field']) ? sanitize_text_field($form_data['meta_field']) : '';
+    $user = get_userdata($seller_id);
+    $birth_day = mv_get_seller_data($seller_id, 'seller_birthday');
+    $date_parts = explode('/', $birth_day);
+    $birthDate = sprintf('%04d', $date_parts[0]) . sprintf('%02d', $date_parts[1]) . sprintf('%02d', $date_parts[2]);
+    $nationalCode = mv_get_seller_data($seller_id, 'seller_national_code');
+
+    if (!$user || in_array('mv_seller', (array) $user->roles)) {
+        wp_send_json_error(array(
+            'message' => 'User does not exist or is not a seller',
+        ));
+        wp_die();
+    }
+
+    if (!empty($seller_accounting_card_number)) {
+        $response = wp_remote_post('https://napi.jibit.ir/ide/v1/tokens/generate', [
+            'method'    => 'POST',
+            'headers'   => ['Content-Type' => 'application/json'],
+            'body'      => json_encode(['apiKey' => '0ihLRsW7aT', 'secretKey' => '0rULZljifAQcI1RnSzpCb3QLq']),
+        ]);
+
+        if (is_wp_error($response)) {
+            wp_send_json_error(array(
+                'message' => 'در حال حاضر امکان استعلام وجود ندارد',
+            ));
+            wp_die();
+        }
+
+        $result = json_decode(wp_remote_retrieve_body($response), true);
+        if (!isset($result['accessToken'], $result['refreshToken'])) {
+            wp_send_json_error(array(
+                'message' => 'در حال حاضر امکان استعلام وجود ندارد',
+            ));
+            wp_die();
+        }
+
+        $accessToken = $result['accessToken'];
+
+        // درخواست بررسی کارت حساب
+        $api_url_ID_card = "https://napi.jibit.ir/ide/v1/services/matching?cardNumber={$seller_accounting_card_number}&nationalCode={$nationalCode}&birthDate={$birthDate}";
+        $api_response_ID_card = wp_remote_get($api_url_ID_card, [
+            'headers' => ['Authorization' => "Bearer {$accessToken}", 'Content-Type' => 'application/json'],
+        ]);
+
+        if (is_wp_error($api_response_ID_card)) {
+            wp_send_json_error(array(
+                'message' => 'در حال حاضر امکان استعلام وجود ندارد',
+            ));
+            wp_die();
+        }
+
+        $result_ID_card = json_decode(wp_remote_retrieve_body($api_response_ID_card), true);
+        if (isset($result_ID_card['message']) && isset($result_ID_card['code'])) {
+            $error_message = isset($result_ID_card['message']) ? $result_ID_card['message'] : 'خطای نامشخص در پاسخ سرور';
+            wp_send_json_error(array(
+                'message' => $error_message,
+            ));
+            wp_die();
+        }
+
+        // درخواست تبدیل شماره کارت به IBAN
+        $api_url_card_to_iban = "https://napi.jibit.ir/ide/v1/cards?number={$seller_accounting_card_number}&iban=true";
+        $api_response_card_to_iban = wp_remote_get($api_url_card_to_iban, [
+            'headers' => ['Authorization' => "Bearer {$accessToken}", 'Content-Type' => 'application/json'],
+        ]);
+
+        if (is_wp_error($api_response_card_to_iban)) {
+            wp_send_json_error(array(
+                'message' => 'در حال حاضر امکان استعلام وجود ندارد',
+            ));
+            wp_die();
+        }
+
+        $result_card_to_iban = json_decode(wp_remote_retrieve_body($api_response_card_to_iban), true);
+        if (isset($result_card_to_iban['message']) && isset($result_card_to_iban['code'])) {
+            $error_message = isset($result_card_to_iban['message']) ? $result_card_to_iban['message'] : 'خطای نامشخص در پاسخ سرور';
+            wp_send_json_error(array(
+                'message' => $error_message,
+            ));
+            wp_die();
+        }
+
+        $iban = isset($result_card_to_iban['ibanInfo']['iban']) ? $result_card_to_iban['ibanInfo']['iban'] : '';
+
+        wp_send_json_success(array(
+        ));
+    } else {
+        wp_send_json_error(array(
+            'message' => 'No accounting card number provided',
+        ));
+    }
+
+    wp_die(); 
 }
