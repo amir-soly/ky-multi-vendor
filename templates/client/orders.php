@@ -62,7 +62,6 @@ $seller_orders = get_orders_by_seller_id($seller_id);
                     </button>
             <p class="text-sm">
                 <span>تعداد نتایج:</span>
-                <span><?= $total_count?> مورد</span>
             </p>
         </div>
         <!-- <table class="border-collapse table-fixed w-full">

@@ -1,4 +1,4 @@
-<?php 
+<?php
 function is_dashboard_seller_endpoint($endpoint)
 {
     global $wp_query;
@@ -72,7 +72,7 @@ function check_product_existence($product_id, $user_id)
         return false; // Product does not exist for this user
     }
 }
-function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status ,$action)
+function insert_product_data_into_table($product_id, $seller_id, $regular_price, $sale_price, $from_sale_date, $to_sale_date, $stock, $min_stock, $sold_individually, $status, $action)
 {
     global $wpdb;
     if (empty($action)) {
@@ -136,10 +136,12 @@ function insert_product_data_into_table($product_id, $seller_id, $regular_price,
         }
     }
 }
-function mv_template_part( $template ) {
+function mv_template_part($template)
+{
     require MV_DIR_PATH . '/templates/' . $template . '.php';
 }
-function get_orders_by_seller_id($seller_id) {
+function get_orders_by_seller_id($seller_id)
+{
     $orders_by_seller = [];
 
     $args = array(
@@ -159,7 +161,7 @@ function get_orders_by_seller_id($seller_id) {
         foreach ($order->get_items() as $item_id => $item) {
             if ($item->get_meta('seller_id') == $seller_id) {
                 $seller_items[] = $item;
-                $total_amount += $item->get_total(); 
+                $total_amount += $item->get_total();
             }
         }
 
@@ -175,19 +177,20 @@ function get_orders_by_seller_id($seller_id) {
 
     return $orders_by_seller;
 }
-function mv_seller_store_info_meta($seller_id, $store_data, $meta_field) {
+function mv_seller_store_info_meta($seller_id, $store_data, $meta_field)
+{
     $seller_id = intval($seller_id);
-    
+
     $store_data = sanitize_text_field($store_data);
     $meta_field = sanitize_text_field($meta_field);
-    
+
     $valid_meta_fields = array('seller_status', 'store_bio', 'store_name', 'store_phone', 'store_site', 'store_vacation');
     if (!in_array($meta_field, $valid_meta_fields)) {
         return;
     }
-    
+
     $current_store_data = get_user_meta($seller_id, 'mv_store_data', true);
-    
+
     if (!is_array($current_store_data)) {
         $current_store_data = array();
     }
@@ -196,16 +199,16 @@ function mv_seller_store_info_meta($seller_id, $store_data, $meta_field) {
 
     $data_check = update_user_meta($seller_id, 'mv_store_data', $current_store_data);
     return $data_check;
-
 }
-function mv_get_store_data($seller_id, $meta_field) {
+function mv_get_store_data($seller_id, $meta_field)
+{
     $seller_id = intval($seller_id);
 
     $meta_field = sanitize_text_field($meta_field);
 
     $valid_meta_fields = array('seller_status', 'store_bio', 'store_name', 'store_phone', 'store_site', 'store_vacation');
-    
- 
+
+
 
     $store_data = get_user_meta($seller_id, 'mv_store_data', true);
 
@@ -219,19 +222,20 @@ function mv_get_store_data($seller_id, $meta_field) {
         return false;
     }
 }
-function mv_seller_info_meta($seller_id, $seller_data, $meta_field) {
+function mv_seller_info_meta($seller_id, $seller_data, $meta_field)
+{
     $seller_id = intval($seller_id);
-    
+
     $seller_data = sanitize_text_field($seller_data);
     $meta_field = sanitize_text_field($meta_field);
-    
+
     $valid_meta_fields = array('seller_email', 'seller_phone', 'seller_national_code', 'seller_last_name', 'seller_first_name');
     if (!in_array($meta_field, $valid_meta_fields)) {
         return;
     }
-    
+
     $current_seller_data = get_user_meta($seller_id, 'mv_seller_data', true);
-    
+
     if (!is_array($current_seller_data)) {
         $current_seller_data = array();
     }
@@ -240,15 +244,15 @@ function mv_seller_info_meta($seller_id, $seller_data, $meta_field) {
 
     $data_check = update_user_meta($seller_id, 'mv_seller_data', $current_seller_data);
     return $data_check;
-
 }
-function mv_get_seller_data($seller_id, $meta_field) {
+function mv_get_seller_data($seller_id, $meta_field)
+{
     $seller_id = intval($seller_id);
 
     $meta_field = sanitize_text_field($meta_field);
 
     $valid_meta_fields = array('seller_email', 'seller_phone', 'seller_national_code', 'seller_last_name', 'seller_first_name');
-    
+
 
     $seller_data = get_user_meta($seller_id, 'mv_seller_data', true);
 
@@ -286,45 +290,42 @@ function update_product_status($mv_id, $new_status)
         return 'وضعیت با موفقیت به‌روزرسانی شد';
     }
 }
-
-function mv_seller_document_meta($seller_id, $document, $meta_field , $status) {
+function mv_seller_document_meta($seller_id, $document, $meta_field, $status)
+{
 
     $seller_id = intval($seller_id);
-    
+
     $document = sanitize_text_field($document);
     $meta_field = sanitize_text_field($meta_field);
-    
+
     $valid_meta_fields = array('business_license_img', 'national_card_img', 'birth_certificate_img');
     if (!in_array($meta_field, $valid_meta_fields)) {
         return;
     }
-    
+
     $current_document = get_user_meta($seller_id, 'mv_seller_document', true);
-    
+
     if (!is_array($current_document)) {
         $current_document = array();
     }
 
-    $current_document[$meta_field] =array(
-        'url'=> $document ,
+    $current_document[$meta_field] = array(
+        'url' => $document,
         'status' => $status,
     );
 
     $data_check = update_user_meta($seller_id, 'mv_seller_document', $current_document);
     return $data_check;
-
 }
-
-
-
-function mv_get_seller_document_meta($seller_id, $meta_field , $data) {
+function mv_get_seller_document_meta($seller_id, $meta_field, $data)
+{
     $seller_id = intval($seller_id);
 
     $meta_field = sanitize_text_field($meta_field);
 
     $valid_meta_fields = array('business_license_img', 'national_card_img', 'birth_certificate_img');
-    
- 
+
+
 
     $document_meta = get_user_meta($seller_id, 'mv_seller_document', true);
 
@@ -336,5 +337,60 @@ function mv_get_seller_document_meta($seller_id, $meta_field , $data) {
         return esc_html($document_meta[$meta_field][$data]);
     } else {
         return false;
+    }
+}
+add_filter('woocommerce_payment_complete_order_status', 'reduce_stock_and_record_total', 10, 2);
+function reduce_stock_and_record_total($status, $order_id)
+{
+    global $wpdb;
+    $prefix = $wpdb->prefix;
+
+    $order = wc_get_order($order_id);
+
+    $seller_totals = array();
+
+    foreach ($order->get_items() as $item_id => $item) {
+        $product_id = $item->get_product_id();
+        $quantity = $item->get_quantity();
+        $price = $item->get_total();
+
+        $seller_id = $item->get_meta('seller_id');
+
+        if (!isset($seller_totals[$seller_id])) {
+            $seller_totals[$seller_id] = 0;
+        }
+        $seller_totals[$seller_id] += $price;
+
+        $query = $wpdb->prepare(
+            "SELECT stock FROM {$prefix}mv_seller_products_data WHERE seller_id = %d AND product_id = %d",
+            $seller_id,
+            $product_id
+        );
+
+        $row = $wpdb->get_row($query);
+        if ($row) {
+            $new_stock = $row->stock - $quantity;
+            $wpdb->update(
+                "{$prefix}mv_seller_products_data",
+                array('stock' => $new_stock),
+                array('seller_id' => $seller_id, 'product_id' => $product_id),
+                array('%d'),
+                array('%d', '%d')
+            );
+        }
+
+        if ($wpdb->last_error) {
+            error_log($wpdb->last_error);
+        }
+    }
+
+    foreach ($seller_totals as $seller_id => $total) {
+        $previous_total = get_user_meta($seller_id, 'seller_wallet_total', true);
+
+        if (!empty($previous_total)) {
+            $total += floatval($previous_total);
+        }
+
+        update_user_meta($seller_id, 'seller_wallet_total', $total);
     }
 }
