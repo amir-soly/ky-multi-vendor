@@ -10,34 +10,34 @@ $uploaded_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
 <div class="grid grid-cols-2 gap-4 relative p-1">
     <div class="bg-back rounded-2.5 px-6 py-3 cursor-pointer open-modal" data-form="national_card_img">
         <div class="flex-cb">
-            <div class="w-20 h-16 object-cover flex-cc">
+            <div class="w-20 h-16 object-cover flex-cc overflow-hidden overflow-hidden">
                 <?= mv_get_seller_document_meta($seller_id,'national_card_img', 'url') ? '<img src='. mv_get_seller_document_meta($seller_id,"national_card_img", "url").' alt="">' : $not_upload_svg;?>
             </div>
             <span class="text-paragraph">تصویر روی کارت ملی</span>
             <span>
-            <?= mv_get_seller_document_meta($seller_id,'national_card_img', 'url') ? $uploaded_svg : '';?>
+                <?= mv_get_seller_document_meta($seller_id,'national_card_img', 'url') ? $uploaded_svg : '';?>
             </span>
         </div>
     </div>
     <div class="bg-back rounded-2.5 px-6 py-3 cursor-pointer open-modal" data-form="birth_certificate_img">
         <div class="flex-cb">
-            <div class="w-20 h-16 object-cover flex-cc">
+            <div class="w-20 h-16 object-cover flex-cc overflow-hidden">
                 <?= mv_get_seller_document_meta($seller_id,'birth_certificate_img', 'url') ? '<img src='. mv_get_seller_document_meta($seller_id,"birth_certificate_img", "url").' alt="">' : $not_upload_svg;?>
             </div>
             <span class="text-paragraph">تصویر صفحه اول شناسنامه</span>
             <div class="w-6 h-6">
-            <?= mv_get_seller_document_meta($seller_id,'birth_certificate_img', 'url') ? $uploaded_svg : '';?>
+                <?= mv_get_seller_document_meta($seller_id,'birth_certificate_img', 'url') ? $uploaded_svg : '';?>
             </div>
         </div>
     </div>
     <div class="bg-back rounded-2.5 px-6 py-3 cursor-pointer open-modal" data-form="business_license_img">
         <div class="flex-cb">
-            <div class="w-20 h-16 object-cover flex-cc">
+            <div class="w-20 h-16 object-cover flex-cc overflow-hidden">
                 <?= mv_get_seller_document_meta($seller_id,'business_license_img', 'url') ? '<img src='. mv_get_seller_document_meta($seller_id,"business_license_img", "url").' alt="">' : $not_upload_svg;?>
-                </div>
+            </div>
             <span class="text-paragraph">تصویر جواز کسب (اختیاری)</span>
             <div class="w-6 h-6">
-            <?= mv_get_seller_document_meta($seller_id,'business_license_img', 'url') ? $uploaded_svg : '';?>
+                <?= mv_get_seller_document_meta($seller_id,'business_license_img', 'url') ? $uploaded_svg : '';?>
             </div>
         </div>
     </div>

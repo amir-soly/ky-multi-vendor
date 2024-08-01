@@ -14,18 +14,15 @@ $add_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewB
         <div class="flex-cb">
             <div>
                 <span class="block mb-2.5 text-lite-text text-sm">وضعیت فروشنده</span>
-                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'seller_status');?></p>
+                <p class="text-secondary text-base">حقیقی</p>
             </div>
-            <button class="open-modal p-2" data-form="store_status_form">
-                <?= mv_get_store_data($seller_id,'seller_status') ? $edit_svg : $add_svg;?>
-            </button>
         </div>
     </div>
     <div class="bg-back rounded-2.5 px-6 py-3">
         <div class="flex-cb">
             <div>
                 <span class="block mb-2.5 text-lite-text text-sm">نام فروشگاه</span>
-                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_name');?></p>
+                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_name') ?: 'وارد کنید';?></p>
             </div>
             <button class="open-modal p-2" data-form="store_name_form">
                 <?= mv_get_store_data($seller_id,'store_name') ? $edit_svg : $add_svg;?>
@@ -36,7 +33,7 @@ $add_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewB
         <div class="flex-cb">
             <div>
                 <span class="block mb-2.5 text-lite-text text-sm">درباره فروشگاه</span>
-                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_bio');?></p>
+                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_bio') ?: 'وارد کنید';?></p>
             </div>
             <button class="open-modal p-2" data-form="store_about_form"> 
                 <?= mv_get_store_data($seller_id,'store_bio') ? $edit_svg : $add_svg;?>
@@ -47,7 +44,7 @@ $add_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewB
         <div class="flex-cb">
             <div>
                 <span class="block mb-2.5 text-lite-text text-sm">شماره تلفن ثابت فروشگاه</span>
-                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_phone');?></p>
+                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_phone') ?: 'وارد کنید';?></p>
             </div>
             <button class="open-modal p-2" data-form="store_landline_form">
                 <?= mv_get_store_data($seller_id,'store_phone') ? $edit_svg : $add_svg;?>
@@ -58,7 +55,7 @@ $add_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewB
         <div class="flex-cb">
             <div>
                 <span class="block mb-2.5 text-lite-text text-sm">وب‌سایت فروشگاه</span>
-                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_site');?></p>
+                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_site') ?: 'وارد کنید';?></p>
             </div>
             <button class="open-modal p-2" data-form="store_website_form">
             <?= mv_get_store_data($seller_id,'store_site') ? $edit_svg : $add_svg;?>
@@ -69,7 +66,7 @@ $add_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewB
         <div class="flex-cb">
             <div>
                 <span class="block mb-2.5 text-lite-text text-sm">روزهای تعطیل فروشگاه</span>
-                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_vacation');?></p>
+                <p class="text-secondary text-base"><?= mv_get_store_data($seller_id,'store_vacation') ?: 'وارد کنید';?></p>
             </div>
             <button class="open-modal p-2" data-form="store_holidays_form">
             <?= mv_get_store_data($seller_id,'store_vacation') ? $edit_svg : $add_svg;?>

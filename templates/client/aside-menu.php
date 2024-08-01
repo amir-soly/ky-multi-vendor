@@ -49,6 +49,18 @@ $user = wp_get_current_user();
             </a>
         </li>
         <li>
+            <a href="<?php echo esc_attr(home_url('dashboard-seller/products')); ?>" class="flex items-center gap-4 py-2 <?php echo is_dashboard_seller_endpoint('products')? 'active': ''; ?>">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="26" height="25" viewBox="0 0 26 25" fill="none"><path d="M24.5111 6.11111L12.7556 11.2222M24.5111 6.11111V19.2294C24.5111 19.3323 24.448 19.4247 24.3522 19.4622L12.7556 24M24.5111 6.11111L18.8889 3.66667M12.7556 11.2222V24M12.7556 11.2222L7.64444 9M12.7556 24L1.1589 19.4622C1.06306 19.4247 1 19.3323 1 19.2294V6.11111M1 6.11111L12.6559 1.04334C12.7195 1.0157 12.7917 1.0157 12.8552 1.04334L15.8222 2.33333M1 6.11111L4.57778 7.66667M4.57778 7.66667V13.1122C4.57778 13.2069 4.63128 13.2934 4.71597 13.3358L7.28264 14.6191C7.44887 14.7022 7.64444 14.5813 7.64444 14.3955V9M4.57778 7.66667L7.64444 9M4.57778 7.66667L15.8222 2.33333M7.64444 9L18.8889 3.66667M18.8889 3.66667L15.8222 2.33333" stroke="#B3B3B3" stroke-width="1.25"/></svg></span>
+                <span class="font-bold">محصولات</span>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo esc_attr(home_url('dashboard-seller/seller-orders')); ?>" class="flex items-center gap-4 py-2 <?php echo is_dashboard_seller_endpoint('seller-orders')? 'active': ''; ?>">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 18 24" fill="none"><path d="M0.5 6.03857H17.0385V20.0001C17.0385 21.9331 15.4715 23.5001 13.5385 23.5001H4C2.06701 23.5001 0.5 21.9331 0.5 20.0001V6.03857Z" stroke="#B3B3B3"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12.8194 5.53846C12.8365 5.38697 12.8453 5.23297 12.8453 5.07692C12.8453 2.8253 11.02 1 8.76833 1C6.51671 1 4.69141 2.8253 4.69141 5.07692C4.69141 5.23297 4.70017 5.38697 4.71724 5.53846H3.7121C3.6984 5.38645 3.69141 5.2325 3.69141 5.07692C3.69141 2.27302 5.96442 0 8.76833 0C11.5722 0 13.8453 2.27302 13.8453 5.07692C13.8453 5.2325 13.8383 5.38645 13.8246 5.53846H12.8194Z" fill="#B3B3B3"/></svg></span>
+                <span class="font-bold">سفارشات</span>
+            </a>
+        </li>
+        <li>
             <a href="<?php echo esc_attr(wp_logout_url(home_url())); ?>" class="flex items-center gap-4 py-2">
                 <span><svg xmlns="http://www.w3.org/2000/svg" width="25" height="18" viewBox="0 0 25 18" fill="none"><path d="M17.4662 12.8557V13.6241C17.4662 15.7098 15.7098 17.4662 13.6241 17.4662H4.84212C2.7564 17.4662 1 15.7098 1 13.6241V4.84212C1 2.7564 2.7564 1 4.84212 1H13.6241C15.7098 1 17.4662 2.7564 17.4662 4.84212V5.8301" stroke="#B3B3B3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.2801 9.2334L23.4531 9.2334" stroke="#B3B3B3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.7068 12.5264L24 9.23312L20.7068 5.93987" stroke="#B3B3B3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 <span class="font-bold">خروج از حساب کاربری</span>
