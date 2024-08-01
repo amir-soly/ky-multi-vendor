@@ -6,6 +6,12 @@ $user = wp_get_current_user();
 $user_id = $user->ID;
 
 $profile_image = 0;
+
+$seller_wallet_total = get_user_meta(get_current_user_id(), 'seller_wallet_total', true);
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -20,7 +26,7 @@ $profile_image = 0;
             <div class="container flex-cb">
                 <span class="text-lg !text-primary font-bold">مرکز فروشندگان</span>
                 <img src="<?php echo esc_attr(MV_DIR_URL . 'assets/client/img/logo.png')?>" alt="کالا یدک" width="140">
-                <span id="wallet_balance" class="p-2 rounded-full border border-white text-white">10000000 تومان</span>
+                <span id="wallet_balance" class="p-2 rounded-full border border-white text-white"><?= wc_price( $seller_wallet_total) ?></span>
             </div>
         </header>
         <div id="messages-container" class="fixed right-1/2 top-6 translate-x-1/2 z-50 flex flex-col gap-3"></div>
