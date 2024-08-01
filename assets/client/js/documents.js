@@ -83,14 +83,13 @@ jQuery(document).ready(function($) {
                     loadTemplate();
                     
                     customMessage('اطلاعات با موفقیت ثبت شد.', 'success');
+                } else {
+                    customMessage(response.data.message, 'warnig');
                 }
-                console.log(response.success);
             },
             error: function(error) {
                 submitButton.prop('disabled', false).html('تایید');
                 customMessage('مشکلی پیش آمده دوباره امتحان کنید.', 'error');
-                
-                console.error('Error in form submission', error);
             }
         });
     });

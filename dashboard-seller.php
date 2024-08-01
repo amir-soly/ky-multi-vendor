@@ -33,7 +33,7 @@ $seller_wallet_total = get_user_meta(get_current_user_id(), 'seller_wallet_total
         <main>
             <div class="container my-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-3">
+                    <div class="lg:col-span-3 pl-4 border-l">
                         <?php
                         include MV_DIR_PATH . '/templates/client/aside-menu.php';
                         ?>     

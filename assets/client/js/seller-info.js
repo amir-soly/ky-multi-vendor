@@ -46,20 +46,19 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 submitButton.prop('disabled', false).html('تایید');
 
-                console.log(response.success);
                 if (response.success) {
                     $('#modal-seller-info, #overlay-modal-seller-info').addClass('opacity-0 invisible');
                     $('#loader').removeClass('opacity-0 invisible');
                     loadTemplate(stm_wpcfto_ajaxurl);
 
                     customMessage('اطلاعات با موفقیت ثبت شد.', 'success');
+                } else {
+                    customMessage(response.data.message, 'warnig');
                 }
             },
             error: function(error) {
                 submitButton.prop('disabled', false).html('تایید');
                 customMessage('مشکلی پیش آمده دوباره امتحان کنید.', 'error');
-
-                console.error('Error in form submission', error);
             }
         });
     });
@@ -78,7 +77,6 @@ jQuery(document).ready(function($) {
                 $('#loader').addClass('opacity-0 invisible');
             },
             error: function(error) {
-                console.error('Error in loading template', error);
                 $('#loader').addClass('opacity-0 invisible');
             }
         });

@@ -28,8 +28,8 @@ $months = [
         <div class="bg-back rounded-2.5 px-6 py-3">
             <div class="flex-cb">
                 <div>
-                <span class="block mb-2.5 text-lite-text text-sm">نام و نام‌خانوادگی</span>
-                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_first_name') . mv_get_seller_data($seller_id, 'seller_last_name'); ?></p>
+                    <span class="block mb-2.5 text-lite-text text-sm">نام و نام‌خانوادگی</span>
+                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_first_name') . ' ' . mv_get_seller_data($seller_id, 'seller_last_name') ?: 'وارد کنید'; ?></p>
                 </div>
                 <button class="open-modal p-2" data-form="seller_identity_form"><?= mv_get_seller_data($seller_id, 'seller_frist_name') ? $edit_svg : $add_svg; ?></button>
             </div>
@@ -38,7 +38,7 @@ $months = [
             <div class="flex-cb">
                 <div>
                     <span class="block mb-2.5 text-lite-text text-sm">کد ملی</span>
-                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_national_code'); ?></p>
+                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_national_code') ?: 'وارد کنید'; ?></p>
                 </div>
                 <button class="open-modal p-2" data-form="seller_identity_form"><?= mv_get_seller_data($seller_id, 'seller_national_code') ? $edit_svg : $add_svg; ?></button>
             </div>
@@ -47,7 +47,7 @@ $months = [
             <div class="flex-cb">
                 <div>
                     <span class="block mb-2.5 text-lite-text text-sm">تاریخ تولد</span>
-                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_birthday'); ?></p>
+                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_birthday') ?: 'وارد کنید'; ?></p>
                 </div>
                 <button class="open-modal p-2" data-form="seller_identity_form"><?= mv_get_seller_data($seller_id, 'seller_birthday') ? $edit_svg : $add_svg; ?></button>
             </div>
@@ -64,7 +64,7 @@ $months = [
             <div class="flex-cb">
                 <div>
                     <span class="block mb-2.5 text-lite-text text-sm">ایمیل</span>
-                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_email'); ?></p>
+                    <p class="text-secondary text-base"><?= mv_get_seller_data($seller_id, 'seller_email') ?: 'وارد کنید'; ?></p>
                 </div>
                 <button class="open-modal p-2" data-form="seller_email_form"><?= mv_get_seller_data($seller_id, 'seller_email') ? $edit_svg : $add_svg; ?></button>
             </div>
